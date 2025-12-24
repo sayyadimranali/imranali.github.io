@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hack the Server (Ethical Simulation)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background: #0d1117;
+    color: #c9d1d9;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  #terminal {
+    width: 90%;
+    max-width: 900px;
+    background: #161b22;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 25px rgba(0,255,0,0.25);
+  }
+  .line {
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+  }
+  button {
+    background: #238636;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    margin: 6px 0;
+    font-family: monospace;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+  }
+  button:hover {
+    background: #2ea043;
+  }
+  .ok { color: #3fb950; }
+  .warn { color: #f85149; }
+</style>
+</head>
+
+<body>
+<div id="terminal"></div>
+
+<script>
+const terminal = document.getElementById("terminal");
+
+let step = 0;
+let score = 0;
+
+const missions = [
+  {
+    title: "🔐 Mission 1: Crack the Password",
+    desc: `Hint found:
+password = username + 123
+
+Username: admin`,
+    options: ["admin@123", "admin123", "root123"],
+    correct: 2,
+    explain: "Password logic matched: admin + 123"
+  },
+  {
+    title: "📂 Mission 2: Find Hidden Files",
+    desc: "Which command lists hidden files in Linux?",
+    options: ["ls", "ls -a", "ls -l"],
+    correct: 2,
+    explain: "`ls -a` shows files starting with dot (.)"
+  },
+  {
+    title: "🧬 Mission 3: Decode Base64",
+    desc: "Decode this string:\nYWRtaW46cGFzcw==",
+    options: ["root:root", "admin:pass", "admin:123"],
+    correct: 2,
+    explain: "Base64 decoding results in admin:pass"
+  },
+  {
+    title: "🌐 Mission 4: Identify Risky Open Port",
+    desc:
+`Simulated scan:
+22/tcp open ssh
+80/tcp open http
+3306/tcp open mysql
+
+Which is risky if public?`,
+    options: ["SSH (22)", "HTTP (80)", "MySQL (3306)"],
+    correct: 3,
+    explain: "Database ports must not be exposed publicly"
+  },
+  {
+    title: "📄 Mission 5: Find Sensitive File",
+    desc: "Which file stores user password hashes?",
+    options: ["/etc/passwd", "/etc/shadow", "/var/log/auth.log"],
+    correct: 2,
+    explain: "/etc/shadow stores hashed passwords"
+  },
+  {
+    title: "🧠 Mission 6: Privilege Awareness",
+    desc: "Which user has highest privileges in Linux?",
+    options: ["admin", "user", "root"],
+    correct: 3,
+    explain: "root user has full system control"
+  },
+  {
+    title: "🔍 Mission 7: Check Open Ports",
+    desc: "Which command checks listening ports?",
+    options: ["df -h", "ss -tuln", "uptime"],
+    correct: 2,
+    explain: "`ss -tuln` lists listening TCP/UDP ports"
+  },
+  {
+    title: "🗂 Mission 8: Find Suspicious Logs",
+    desc: "Where do authentication logs usually exist?",
+    options: ["/var/log/auth.log", "/etc/passwd", "/boot"],
+    correct: 1,
+    explain: "Authentication attempts are logged in auth.log"
+  },
+  {
+    title: "⚙️ Mission 9: File Permission Issue",
+    desc: "Script fails with permission denied. What do you do?",
+    options: ["chmod +x script.sh", "rm script.sh", "reboot server"],
+    correct: 1,
+    explain: "Executable permission is required"
+  },
+  {
+    title: "🛡 Mission 10: Security Best Practice",
+    desc: "What is the BEST security practice?",
+    options: [
+      "Expose services to internet",
+      "Use strong passwords & firewall",
+      "Disable logs"
+    ],
+    correct: 2,
+    explain: "Strong passwords + firewall reduce attack surface"
+  }
+];
+
+function clearScreen() {
+  terminal.innerHTML = "";
+}
+
+function printLine(text, cls = "") {
+  const div = document.createElement("div");
+  div.className = "line " + cls;
+  div.textContent = text;
+  terminal.appendChild(div);
+}
+
+function showMission() {
+  clearScreen();
+  const m = missions[step];
+
+  printLine("⚠️ ETHICAL & EDUCATIONAL SIMULATION ONLY");
+  printLine(`Mission ${step + 1} / ${missions.length}`);
+  printLine("");
+  printLine(m.title);
+  printLine("");
+  printLine(m.desc);
+  printLine("");
+  printLine("Choose the correct answer:");
+
+  m.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = `${i + 1}. ${opt}`;
+    btn.onclick = () => handleAnswer(i + 1);
+    terminal.appendChild(btn);
+  });
+}
+
+function handleAnswer(choice) {
+  clearScreen();
+  const m = missions[step];
+
+  if (choice === m.correct) {
+    score++;
+    printLine("✅ Access Granted", "ok");
+  } else {
+    printLine("❌ Access Denied", "warn");
+    printLine(`✅ Correct answer: ${m.options[m.correct - 1]}`);
+  }
+
+  printLine("");
+  printLine(`ℹ️ ${m.explain}`);
+
+  step++;
+
+  setTimeout(() => {
+    if (step < missions.length) {
+      showMission();
+    } else {
+      showResult();
+    }
+  }, 1500);
+}
+
+function showResult() {
+  clearScreen();
+  printLine("🏁 Simulation Completed!");
+  printLine(`Final Score: ${score} / ${missions.length}`);
+  printLine("");
+
+  if (score >= 8) {
+    printLine("🎉 Status: Ethical Hacker Mindset ✔");
+  } else {
+    printLine("🧠 Status: Practice Recommended");
+  }
+
+  printLine("");
+
+  const retryBtn = document.createElement("button");
+  retryBtn.textContent = "🔁 Retry Simulation";
+  retryBtn.onclick = () => {
+    step = 0;
+    score = 0;
+    showMission();
+  };
+
+  const exitBtn = document.createElement("button");
+  exitBtn.textContent = "⬅ Exit to Portfolio";
+  exitBtn.onclick = () => {
+    window.location.href = "index.html";
+  };
+
+  terminal.appendChild(retryBtn);
+  terminal.appendChild(exitBtn);
+}
+
+// Start game
+showMission();
+</script>
+
+</body>
+</html>
