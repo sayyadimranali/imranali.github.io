@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sosei | Restorative Living</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clay: #D6C7B3;
+            --moss: #6B705C;
+            --sand: #F5F1ED;
+            --charcoal: #2C2C2C;
+            --terracotta: #B07D62;
+            --transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--sand);
+            color: var(--charcoal);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+        }
+
+        /* --- Layout --- */
+        section {
+            padding: 10vw 8vw;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            text-align: center;
+            background: linear-gradient(to bottom, #EAE4DD, var(--sand));
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 1.5s forwards 0.5s;
+        }
+
+        .hero-subtitle {
+            font-style: italic;
+            color: var(--moss);
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards 1s;
+        }
+
+        /* --- Philosophy Section --- */
+        .philosophy {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .image-placeholder {
+            background: var(--clay);
+            aspect-ratio: 4/5;
+            width: 100%;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-placeholder::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .content-block {
+            max-width: 450px;
+        }
+
+        .content-block h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--terracotta);
+        }
+
+        /* --- The "Ma" Space (Minimalist Callout) --- */
+        .zen-break {
+            text-align: center;
+            background-color: var(--charcoal);
+            color: var(--sand);
+        }
+
+        .zen-break blockquote {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- Call to Action --- */
+        .cta-section {
+            text-align: center;
+            background: var(--sand);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            border: 1px solid var(--charcoal);
+            text-decoration: none;
+            color: var(--charcoal);
+            transition: var(--transition);
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .btn:hover {
+            background: var(--charcoal);
+            color: var(--sand);
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .philosophy { grid-template-columns: 1fr; }
+            section { padding: 20vw 8vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1 class="hero-title">Sosei</h1>
+        <p class="hero-subtitle">The Art of Intentional Rest</p>
+    </section>
+
+    <section class="philosophy">
+        <div class="image-placeholder">
+            </div>
+        <div class="content-block">
+            <h2>Crafted Stillness</h2>
+            <p>We believe that your environment is the silent architect of your peace. By merging the warmth of Scandinavian "Hygge" with the disciplined aesthetic of Japanese minimalism, we create spaces that breathe.</p>
+        </div>
+    </section>
+
+    <section class="zen-break">
+        <blockquote>"Beauty lies in the space between the notes."</blockquote>
+    </section>
+
+    <section class="philosophy" style="direction: rtl;">
+        <div class="image-placeholder" style="background: var(--moss);">
+            </div>
+        <div class="content-block" style="direction: ltr;">
+            <h2>Natural Honesty</h2>
+            <p>Our approach prioritizes raw, honest materials. Tactile linens, unsealed oak, and hand-poured clay work in harmony to ground your senses in the present moment.</p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Begin Your Journey to Ma</h2>
+        <p>A more composed life starts with a single, intentional step.</p>
+        <a href="#" class="btn">EXPLORE THE COLLECTION</a>
+    </section>
+
+    <footer style="padding: 2rem; text-align: center; font-size: 0.7rem; letter-spacing: 0.2rem; color: var(--moss);">
+        © 2024 SOSEI STUDIO
+    </footer>
+
+</body>
+</html>
