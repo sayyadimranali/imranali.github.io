@@ -1,196 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sosei | Restorative Living</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --clay: #D6C7B3;
-            --moss: #6B705C;
-            --sand: #F5F1ED;
-            --charcoal: #2C2C2C;
-            --terracotta: #B07D62;
-            --transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imran Ali | Linux Administrator</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d1117;
+    color: #c9d1d9;
+  }
 
-        body {
-            background-color: var(--sand);
-            color: var(--charcoal);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+  header {
+    padding: 60px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #0d1117, #161b22);
+  }
 
-        h1, h2 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 400;
-        }
+  header h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+    color: #58a6ff;
+  }
 
-        /* --- Layout --- */
-        section {
-            padding: 10vw 8vw;
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+  header p {
+    font-size: 18px;
+    color: #8b949e;
+  }
 
-        /* --- Hero Section --- */
-        .hero {
-            height: 100vh;
-            text-align: center;
-            background: linear-gradient(to bottom, #EAE4DD, var(--sand));
-        }
+  section {
+    max-width: 1000px;
+    margin: auto;
+    padding: 50px 20px;
+  }
 
-        .hero-title {
-            font-size: clamp(3rem, 8vw, 6rem);
-            margin-bottom: 1rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeIn 1.5s forwards 0.5s;
-        }
+  h2 {
+    color: #58a6ff;
+    border-bottom: 2px solid #21262d;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+  }
 
-        .hero-subtitle {
-            font-style: italic;
-            color: var(--moss);
-            letter-spacing: 0.2rem;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            opacity: 0;
-            animation: fadeIn 1.5s forwards 1s;
-        }
+  .skills span {
+    display: inline-block;
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 8px 14px;
+    margin: 6px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
 
-        /* --- Philosophy Section --- */
-        .philosophy {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
+  .card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+  }
 
-        .image-placeholder {
-            background: var(--clay);
-            aspect-ratio: 4/5;
-            width: 100%;
-            border-radius: 2px;
-            position: relative;
-            overflow: hidden;
-        }
+  .btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 20px;
+    color: #fff;
+    background: #238636;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
 
-        .image-placeholder::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.05);
-        }
+  .btn:hover {
+    background: #2ea043;
+  }
 
-        .content-block {
-            max-width: 450px;
-        }
-
-        .content-block h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: var(--terracotta);
-        }
-
-        /* --- The "Ma" Space (Minimalist Callout) --- */
-        .zen-break {
-            text-align: center;
-            background-color: var(--charcoal);
-            color: var(--sand);
-        }
-
-        .zen-break blockquote {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* --- Call to Action --- */
-        .cta-section {
-            text-align: center;
-            background: var(--sand);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 1.2rem 3rem;
-            border: 1px solid var(--charcoal);
-            text-decoration: none;
-            color: var(--charcoal);
-            transition: var(--transition);
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            letter-spacing: 0.1rem;
-        }
-
-        .btn:hover {
-            background: var(--charcoal);
-            color: var(--sand);
-        }
-
-        /* --- Animations --- */
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .philosophy { grid-template-columns: 1fr; }
-            section { padding: 20vw 8vw; }
-        }
-    </style>
+  footer {
+    text-align: center;
+    padding: 20px;
+    background: #161b22;
+    color: #8b949e;
+  }
+</style>
 </head>
+
 <body>
 
-    <section class="hero">
-        <h1 class="hero-title">Sosei</h1>
-        <p class="hero-subtitle">The Art of Intentional Rest</p>
-    </section>
+<header>
+  <h1>Imran Ali</h1>
+  <p>Linux Administrator | DevOps Enthusiast | Automation Lover</p>
+</header>
 
-    <section class="philosophy">
-        <div class="image-placeholder">
-            </div>
-        <div class="content-block">
-            <h2>Crafted Stillness</h2>
-            <p>We believe that your environment is the silent architect of your peace. By merging the warmth of Scandinavian "Hygge" with the disciplined aesthetic of Japanese minimalism, we create spaces that breathe.</p>
-        </div>
-    </section>
+<section>
+  <h2>👨‍💻 About Me</h2>
+  <p>
+    I am a Linux Administrator with hands-on experience managing production servers,
+    troubleshooting incidents, automating tasks, and maintaining secure and reliable systems.
+    I enjoy building practical tools and learning through experimentation.
+  </p>
+</section>
 
-    <section class="zen-break">
-        <blockquote>"Beauty lies in the space between the notes."</blockquote>
-    </section>
+<section>
+  <h2>🛠️ Skills</h2>
+  <div class="skills">
+    <span>Linux (RHEL / CentOS / Ubuntu)</span>
+    <span>Shell Scripting (Bash)</span>
+    <span>System Administration</span>
+    <span>Troubleshooting</span>
+    <span>Networking</span>
+    <span>Docker (Basics)</span>
+    <span>Git & GitHub</span>
+  </div>
+</section>
 
-    <section class="philosophy" style="direction: rtl;">
-        <div class="image-placeholder" style="background: var(--moss);">
-            </div>
-        <div class="content-block" style="direction: ltr;">
-            <h2>Natural Honesty</h2>
-            <p>Our approach prioritizes raw, honest materials. Tactile linens, unsealed oak, and hand-poured clay work in harmony to ground your senses in the present moment.</p>
-        </div>
-    </section>
+<section>
+  <h2>🎮 Interactive Terminal Game</h2>
 
-    <section class="cta-section">
-        <h2>Begin Your Journey to Ma</h2>
-        <p>A more composed life starts with a single, intentional step.</p>
-        <a href="#" class="btn">EXPLORE THE COLLECTION</a>
-    </section>
+  <div class="card">
+    <h3>Linux Survival Game</h3>
+    <p>
+      A terminal-style interactive game inspired by real Linux production incidents.
+      Players must choose the correct Linux command to keep production running.
+    </p>
+    <p>
+      <strong>Tech:</strong> Bash (original logic), JavaScript (browser version), HTML, CSS
+    </p>
 
-    <footer style="padding: 2rem; text-align: center; font-size: 0.7rem; letter-spacing: 0.2rem; color: var(--moss);">
-        © 2024 SOSEI STUDIO
-    </footer>
+    <a class="btn" href="linux-survival-game.html">
+      ▶️ Play Linux Survival Game
+    </a>
+  </div>
+</section>
+
+<section>
+  <h2>📂 Projects</h2>
+
+  <div class="card">
+    <h3>Automation Scripts</h3>
+    <p>Collection of Bash scripts for monitoring, cleanup, backups, and reporting.</p>
+  </div>
+
+  <div class="card">
+    <h3>Linux Practice Labs</h3>
+    <p>Hands-on lab setups for services, security, and troubleshooting.</p>
+  </div>
+</section>
+
+<section>
+  <h2>📬 Contact</h2>
+  <p>
+    GitHub: <a href="https://github.com/sayyadimranali" style="color:#58a6ff;">github.com/sayyadimranali</a>
+  </p>
+</section>
+
+<footer>
+  © 2025 Imran Ali | Built with Linux mindset 🐧
+</footer>
 
 </body>
 </html>
