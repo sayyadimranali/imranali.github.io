@@ -73,4 +73,61 @@ const missions = [
 80/tcp open  http`
   },
   {
-    hint: "Connect t
+    hint: "Connect to the server using SSH.",
+    check: cmd => cmd === "ssh admin@192.168.1.10",
+    response: "Password: "
+  },
+  {
+    hint: "Hint: weak password = admin + 123",
+    check: cmd => cmd === "admin123",
+    response: "Login successful\n"
+  },
+  {
+    hint: "List all files including hidden ones.",
+    check: cmd => cmd === "ls -a",
+    response: ".  ..  secret.txt"
+  },
+  {
+    hint: "Read the secret file.",
+    check: cmd => cmd === "cat secret.txt",
+    response: "FLAG{ethical_hacking_simulation_complete}"
+  }
+];
+
+function print(text) {
+  output.textContent += text + "\n";
+  output.scrollTop = output.scrollHeight;
+}
+
+print("⚠️ EDUCATIONAL & ETHICAL SIMULATION ONLY");
+print("Mission 1: Begin hacking simulation\n");
+print(missions[0].hint);
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const cmd = input.value.trim();
+    input.value = "";
+
+    print(`$ ${cmd}`);
+
+    const mission = missions[stage];
+
+    if (mission.check(cmd)) {
+      print(mission.response);
+      stage++;
+      if (missions[stage]) {
+        print("\n✔ Next Mission:");
+        print(missions[stage].hint);
+      } else {
+        print("\n🎉 MISSION COMPLETED!");
+        print("You successfully finished the ethical hacking simulation.");
+      }
+    } else {
+      print("❌ Command not correct. Try again.");
+      print(`Hint: ${mission.hint}`);
+    }
+  }
+});
+</script>
+</body>
+</html>
