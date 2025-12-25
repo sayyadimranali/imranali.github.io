@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Imran Ali | Linux Administrator</title>
+
+  <style>
+    :root{
+      --max: 1180px;
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 25px 70px rgba(0,0,0,.55);
+      --shadow2: 0 15px 40px rgba(0,0,0,.45);
+
+      /* Dark defaults */
+      --bg0:#070A10;
+      --bg1:#0b1220;
+      --card: rgba(255,255,255,.07);
+      --card2: rgba(255,255,255,.10);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.88);
+      --muted: rgba(255,255,255,.62);
+      --accent:#6EE7FF;
+      --accent2:#A78BFA;
+      --good:#2ee59d;
+      --link: rgba(110,231,255,.92);
+      --navbg: rgba(10,12,18,.60);
+      --navbg2: rgba(10,12,18,.25);
+    }
+
+    /* Light theme overrides */
+    html[data-theme="light"]{
+      --bg0:#f6f8ff;
+      --bg1:#eef2ff;
+      --card: rgba(255,255,255,.78);
+      --card2: rgba(255,255,255,.92);
+      --border: rgba(15, 23, 42, .12);
+      --text: rgba(15, 23, 42, .92);
+      --muted: rgba(15, 23, 42, .64);
+      --accent:#2563eb;
+      --accent2:#7c3aed;
+      --good:#16a34a;
+      --link: rgba(37,99,235,.92);
+      --navbg: rgba(255,255,255,.65);
+      --navbg2: rgba(255,255,255,.30);
+      --shadow: 0 25px 70px rgba(2,6,23,.16);
+      --shadow2: 0 15px 40px rgba(2,6,23,.14);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 800px at 15% 10%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 52%),
+        radial-gradient(900px 700px at 55% 90%, color-mix(in srgb, var(--good) 12%, transparent), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 65%, color-mix(in srgb, var(--bg0) 70%, #000 30%));
+      overflow-x:hidden;
+    }
+
+    /* Background particle canvas */
+    canvas#fx{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      opacity:.9;
+    }
+
+    /* 3D hero canvas (Three.js) */
+    canvas#hero3d{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:-2;
+      pointer-events:none;
+      opacity:.9;
+      filter: saturate(1.15);
+    }
+
+    /* Grain overlay */
+    .grain{
+      position:fixed;
+      inset:-40%;
+      z-index:-1;
+      pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      transform: rotate(8deg);
+      opacity:.10;
+      mix-blend-mode: overlay;
+    }
+    html[data-theme="light"] .grain{ opacity: .06; mix-blend-mode: multiply; }
+
+    /* Nav */
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:60;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, var(--navbg), var(--navbg2));
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    }
+    .nav-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding: 12px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+      min-width: 240px;
+    }
+    .logo{
+      width:36px;height:36px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent) 90%, white 10%), color-mix(in srgb, var(--accent2) 75%, transparent), color-mix(in srgb, var(--good) 35%, transparent));
+      box-shadow: 0 10px 30px color-mix(in srgb, var(--accent) 18%, transparent);
+      border:1px solid var(--border);
+    }
+    .brand b{letter-spacing:.2px}
+    .brand small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+
+    .nav-links{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .nav a{
+      color: color-mix(in srgb, var(--text) 92%, transparent);
+      text-decoration:none;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      transition: transform .25s ease, background .25s ease, color .25s ease;
+      border: 1px solid transparent;
+    }
+    .nav a:hover{
+      background: color-mix(in srgb, var(--card2) 70%, transparent);
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--border) 80%, transparent);
+    }
+
+    .toggles{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin-left: 6px;
+    }
+    .toggle-btn, .select{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 85%, transparent);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 12px;
+      cursor:pointer;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .toggle-btn:hover, .select:hover{
+      transform: translateY(-1px);
+      background: color-mix(in srgb, var(--card2) 92%, transparent);
+      border-color: color-mix(in srgb, var(--border) 90%, transparent);
+    }
+    .select{ padding: 8px 10px; }
+    .select select{
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-weight: 900;
+      font-size: 12px;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    /* Wrap */
+    .wrap{
+      max-width:var(--max);
+      margin:0 auto;
+      padding: 0 18px 72px;
+    }
+
+    /* Hero */
+    header.hero{
+      padding: 62px 0 26px;
+      position:relative;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.35fr .9fr;
+      gap: 18px;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){
+      .hero-grid{grid-template-columns:1fr;gap:14px}
+      .brand{min-width:auto}
+    }
+
+    .hero-card, .stat-card, .card{
+      position:relative;
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--card) 88%, transparent), color-mix(in srgb, var(--card) 50%, transparent));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      transform-style:preserve-3d;
+    }
+    .hero-card{ min-height: 360px; }
+
+    .hero-card::before, .card::before, .stat-card::before{
+      content:"";
+      position:absolute;inset:-1px;
+      background:
+        radial-gradient(900px 300px at 20% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
+        radial-gradient(900px 260px at 90% 20%, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 52%),
+        radial-gradient(700px 260px at 60% 100%, color-mix(in srgb, var(--good) 12%, transparent), transparent 55%);
+      opacity:.95;
+      pointer-events:none;
+    }
+    .hero-card::after{
+      content:"";
+      position:absolute;inset:-2px;
+      background: linear-gradient(115deg, transparent 0%, color-mix(in srgb, #fff 18%, transparent) 35%, transparent 70%);
+      transform: translateX(-60%) rotate(10deg);
+      opacity:.0;
+      transition: opacity .35s ease, transform .65s ease;
+      pointer-events:none;
+    }
+    .hero-card:hover::after{ opacity:.7; transform: translateX(35%) rotate(10deg); }
+
+    .hero-inner{
+      position:relative;
+      padding: 34px 28px;
+      z-index:1;
+    }
+    @media (max-width: 520px){ .hero-inner{padding: 26px 18px} }
+
+    /* HERO TOP ROW (photo + text) */
+    .hero-top{
+      display:flex;
+      gap: 16px;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+    .hero-text{ flex: 1; min-width: 240px; }
+
+    /* Beautiful Photo Frame */
+    .avatar-wrap{
+      width: 132px;
+      height: 132px;
+      flex: 0 0 132px;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+    @media (max-width: 520px){
+      .avatar-wrap{ width: 108px; height: 108px; flex-basis: 108px; }
+    }
+
+    .avatar-ring{
+      position:absolute;
+      inset:-8px;
+      border-radius: 999px;
+      background:
+        conic-gradient(
+          from 90deg,
+          color-mix(in srgb, var(--accent) 80%, transparent),
+          color-mix(in srgb, var(--accent2) 70%, transparent),
+          color-mix(in srgb, var(--good) 65%, transparent),
+          color-mix(in srgb, var(--accent) 80%, transparent)
+        );
+      filter: blur(.0px);
+      opacity: .85;
+      box-shadow: 0 18px 60px color-mix(in srgb, var(--accent) 16%, transparent);
+      animation: spin 6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .avatar-glass{
+      position:absolute;
+      inset:-2px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--card2) 70%, transparent);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .avatar{
+      position:absolute;
+      inset: 6px;
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+      transform: translateZ(12px);
+      background:
+        radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
+        radial-gradient(circle at 70% 30%, color-mix(in srgb, var(--accent2) 14%, transparent), transparent 58%),
+        linear-gradient(180deg, color-mix(in srgb, var(--card2) 92%, transparent), color-mix(in srgb, var(--card) 55%, transparent));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 1000;
+      letter-spacing: .5px;
+      color: color-mix(in srgb, var(--text) 86%, transparent);
+    }
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+    .avatar-fallback{
+      font-size: 28px;
+      opacity: .75;
+      user-select:none;
+    }
+
+    /* Hover effect */
+    .avatar-wrap:hover .avatar-ring{ opacity: 1; }
+    .avatar-wrap:hover{ transform: translateY(-2px); }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color: var(--text);
+      font-weight:900;
+      font-size: 12px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--card2) 72%, transparent);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--good);
+      box-shadow: 0 0 18px color-mix(in srgb, var(--good) 60%, transparent);
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1.05;
+      letter-spacing: -1px;
+    }
+    .subtitle{
+      margin:0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 64ch;
+    }
+
+    .cta{
+      margin-top: 18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      align-items:center;
+    }
+
+    /* Buttons */
+    .btn{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      text-decoration:none;
+      font-weight: 950;
+      font-size: 14px;
+      letter-spacing:.2px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 82%, transparent);
+      color: var(--text);
+      box-shadow: var(--shadow2);
+      transform: translateZ(0);
+      transition: transform .22s ease, background .22s ease, border-color .22s ease;
+      overflow:hidden;
+      cursor:pointer;
+    }
+    .btn.primary{
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 22%, transparent),
+        color-mix(in srgb, var(--accent2) 18%, transparent)
+      );
+      border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+    }
+    .btn .shine{
+      position:absolute;
+      inset:-40px -80px auto auto;
+      width:180px;height:180px;
+      background: radial-gradient(circle at 30% 30%, color-mix(in srgb, #fff 45%, transparent), transparent 55%);
+      opacity:0;
+      transition: opacity .25s ease;
+      pointer-events:none;
+    }
+    .btn:hover{
+      transform: translateY(-2px) scale(1.01);
+      background: color-mix(in srgb, var(--card2) 85%, transparent);
+      border-color: color-mix(in srgb, var(--border) 95%, transparent);
+    }
+    .btn:hover .shine{opacity:.75}
+    .btn:active{transform: translateY(0px) scale(.99)}
+
+    /* Right stat card */
+    .stat-inner{
+      padding: 20px 18px;
+      display:grid;
+      gap: 12px;
+      position:relative;
+      z-index:1;
+    }
+    .mini{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .pill{
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      background: color-mix(in srgb, var(--card) 85%, transparent);
+    }
+    .pill b{display:block;font-size:13px}
+    .pill span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width: 42px;height:42px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at 30% 30%,
+        color-mix(in srgb, var(--accent) 20%, transparent),
+        color-mix(in srgb, var(--accent2) 14%, transparent),
+        color-mix(in srgb, #fff 3%, transparent)
+      );
+      box-shadow: 0 12px 30px color-mix(in srgb, var(--accent2) 12%, transparent);
+    }
+
+    /* Sections */
+    section{ margin-top: 28px; }
+    .section-title{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      margin: 30px 0 14px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+    .section-title p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Grid */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .col-6{grid-column: span 6}
+    .col-12{grid-column: span 12}
+    @media (max-width: 920px){ .col-6{grid-column: span 12} }
+
+    .card{
+      padding: 18px 18px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+    .card:hover{
+      border-color: color-mix(in srgb, var(--border) 95%, transparent);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--card2) 88%, transparent), color-mix(in srgb, var(--card) 50%, transparent));
+    }
+    .card h3{
+      margin: 2px 0 8px;
+      font-size: 16px;
+      letter-spacing: .1px;
+    }
+    .card p{
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    /* Chips */
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .chip{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 82%, transparent);
+      color: color-mix(in srgb, var(--text) 94%, transparent);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .2px;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      transform: translateZ(0);
+    }
+    .chip:hover{
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+      background: color-mix(in srgb, var(--card2) 88%, transparent);
+    }
+
+    /* Lists + links */
+    .links-list{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: color-mix(in srgb, var(--text) 84%, transparent);
+    }
+    a.inline{
+      color: var(--link);
+      text-decoration:none;
+      font-weight: 900;
+    }
+    a.inline:hover{text-decoration:underline}
+
+    /* Blog */
+    .blog-meta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+      align-items:center;
+    }
+    .tag{
+      font-size: 11px;
+      font-weight: 950;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 80%, transparent);
+      color: color-mix(in srgb, var(--text) 88%, transparent);
+    }
+    .read{
+      margin-top: 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .read small{ color: var(--muted); font-weight: 800; }
+    .read a{
+      color: var(--link);
+      font-weight: 950;
+      text-decoration:none;
+    }
+    .read a:hover{text-decoration:underline}
+
+    /* Reveal */
+    .reveal{
+      opacity:0;
+      transform: translateY(12px) scale(.99);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform: translateY(0) scale(1);
+    }
+
+    .divider{
+      height:1px;
+      background: color-mix(in srgb, var(--border) 70%, transparent);
+      margin: 12px 0;
+    }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    footer{
+      margin-top: 44px;
+      padding: 18px 0 0;
+      color: color-mix(in srgb, var(--muted) 90%, transparent);
+      text-align:center;
+      font-size: 13px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important}
+      canvas#fx{display:none}
+      canvas#hero3d{display:none}
+      .avatar-ring{animation:none !important}
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <b data-i18n="name">Imran Ali</b>
+          <small data-i18n="roleSmall">Linux Administrator • DevOps • Automation</small>
+        </div>
+      </div>
+
+      <div class="nav-links">
+        <a href="#about" data-i18n="navAbout">About</a>
+        <a href="#skills" data-i18n="navSkills">Skills</a>
+        <a href="#games" data-i18n="navGames">Games</a>
+        <a href="#projects" data-i18n="navProjects">Projects</a>
+        <a href="#blog" data-i18n="navBlog">Blog</a>
+        <a href="#contact" data-i18n="navContact">Contact</a>
+
+        <div class="toggles">
+          <button class="toggle-btn" id="themeBtn" type="button" title="Toggle Theme">
+            <span id="themeIcon">🌙</span>
+            <span data-i18n="theme">Theme</span>
+          </button>
+
+          <div class="select" title="Language">
+            🌐
+            <select id="langSelect" aria-label="Language selector">
+              <option value="en">EN</option>
+              <option value="hi">HI</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <!-- HERO -->
+    <header class="hero" id="top">
+      <div class="hero-grid">
+        <div class="hero-card tilt reveal" data-tilt>
+          <canvas id="hero3d" aria-hidden="true"></canvas>
+
+          <div class="hero-inner">
+            <div class="hero-top">
+              <div class="hero-text">
+                <div class="kicker">
+                  <span class="dot"></span>
+                  <span data-i18n="heroKicker">Available for roles • Maharashtra, India</span>
+                </div>
+
+                <h1 data-i18n="heroTitle">Imran Ali</h1>
+                <p class="subtitle" data-i18n="heroSubtitle">
+                  Linux Administrator who loves production-grade reliability, automation, and DevOps engineering.
+                  I build practical tools and learn by experimenting.
+                </p>
+              </div>
+
+              <!-- ✅ YOUR PHOTO (beautiful) -->
+              <!-- Put your photo file in the SAME folder as this index.html and name it: profile.jpg
+                   OR change src below to your image path like: assets/imran.jpg -->
+              <div class="avatar-wrap" aria-label="Profile photo">
+                <div class="avatar-ring" aria-hidden="true"></div>
+                <div class="avatar-glass" aria-hidden="true"></div>
+
+                <div class="avatar">
+                  <img
+                    src="profile.jpg"
+                    alt="Imran Ali"
+                    loading="lazy"
+                    onerror="this.remove(); this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;>IA</div>';"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="cta">
+              <a class="btn primary magnetic" href="#projects">
+                <span data-i18n="ctaProjects">🚀 View Projects</span>
+                <span class="shine" aria-hidden="true"></span>
+              </a>
+              <a class="btn magnetic" href="mailto:sayyadimranali32@gmail.com">
+                <span data-i18n="ctaEmail">📧 Email Me</span>
+                <span class="shine" aria-hidden="true"></span>
+              </a>
+              <a class="btn magnetic" href="https://github.com/sayyadimranali" target="_blank" rel="noreferrer">
+                <span data-i18n="ctaGitHub">💻 GitHub</span>
+                <span class="shine" aria-hidden="true"></span>
+              </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <span class="chip" data-i18n="focus1">RHEL / Ubuntu / SUSE</span>
+              <span class="chip" data-i18n="focus2">Automation</span>
+              <span class="chip" data-i18n="focus3">Containers</span>
+              <span class="chip" data-i18n="focus4">Infra Reliability</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="stat-card tilt reveal" data-tilt>
+          <div class="stat-inner">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <div>
+                <b style="font-size:14px;" data-i18n="bringTitle">What I bring</b>
+                <div style="font-size:12px;margin-top:3px;color:var(--muted)" data-i18n="bringSub">
+                  Production mindset + calm incident handling
+                </div>
+              </div>
+              <div class="badge" aria-hidden="true">🐧</div>
+            </div>
+
+            <div class="mini">
+              <div class="pill">
+                <b data-i18n="p1t">System Admin</b>
+                <span data-i18n="p1s">Hardening • Services • Monitoring</span>
+              </div>
+              <div class="pill">
+                <b data-i18n="p2t">Automation</b>
+                <span data-i18n="p2s">Bash • Repeatable ops</span>
+              </div>
+              <div class="pill">
+                <b data-i18n="p3t">DevOps</b>
+                <span data-i18n="p3s">Docker • CI basics</span>
+              </div>
+              <div class="pill">
+                <b data-i18n="p4t">Cloud</b>
+                <span data-i18n="p4s">AWS • GCP • DO</span>
+              </div>
+            </div>
+
+            <a class="btn primary magnetic" href="#games">
+              <span data-i18n="ctaGames">🎮 Try Interactive Games</span>
+              <span class="shine" aria-hidden="true"></span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <!-- ABOUT -->
+    <section id="about" class="reveal">
+      <div class="section-title">
+        <h2 data-i18n="aboutTitle">👨‍💻 About Me</h2>
+        <p data-i18n="aboutSub">Clean ops • Secure systems • Fast troubleshooting</p>
+      </div>
+
+      <div class="grid">
+        <div class="card tilt col-12" data-tilt>
+          <h3 data-i18n="aboutCardTitle">Production-first Linux Administrator</h3>
+          <p data-i18n="aboutCardText">
+            I manage production servers, troubleshoot incidents, automate repetitive tasks,
+            and maintain secure, reliable systems. I enjoy building practical tools and
+            learning through experimentation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="reveal">
+      <div class="section-title">
+        <h2 data-i18n="skillsTitle">🛠️ Skills</h2>
+        <p data-i18n="skillsSub">Hover the chips</p>
+      </div>
+
+      <div class="card tilt" data-tilt>
+        <div class="chips">
+          <span class="chip">Linux (RHEL / CentOS / Ubuntu / SUSE)</span>
+          <span class="chip">Shell Scripting (Bash)</span>
+          <span class="chip">System Administration</span>
+          <span class="chip">Troubleshooting</span>
+          <span class="chip">Networking</span>
+          <span class="chip">Docker</span>
+          <span class="chip">Puppet</span>
+          <span class="chip">Ansible</span>
+          <span class="chip">Kubernetes</span>
+          <span class="chip">Firewall (Sophos)</span>
+          <span class="chip">Cloud (AWS, GCP, DO)</span>
+          <span class="chip">Git & GitHub</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMES -->
+    <section id="games" class="reveal">
+      <div class="section-title">
+        <h2 data-i18n="gamesTitle">🎮 Interactive Terminal Games</h2>
+        <p data-i18n="gamesSub">3D cards • smooth interactions</p>
+      </div>
+
+      <div class="grid">
+        <div class="card tilt col-6" data-tilt>
+          <h3 data-i18n="game1Title">Linux Survival Game</h3>
+          <p data-i18n="game1Text">
+            A terminal-style interactive game inspired by real Linux production incidents.
+            Players choose the correct Linux command to keep production running.
+          </p>
+          <p><span style="color:var(--muted);font-weight:900" data-i18n="tech">Tech:</span>
+            <span style="color:var(--muted)">Bash (logic), JavaScript, HTML, CSS</span>
+          </p>
+          <div class="row">
+            <a class="btn primary magnetic" href="linux-survival-game.html">
+              <span data-i18n="game1Btn">▶️ Play Linux Survival Game</span>
+              <span class="shine" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card tilt col-6" data-tilt>
+          <h3 data-i18n="game2Title">Hack the Machine (Interactive Simulation)</h3>
+          <p data-i18n="game2Text">
+            A terminal-style, educational hacking simulation designed to demonstrate
+            ethical hacking concepts in a safe and fictional environment.
+          </p>
+          <p style="color:var(--muted)"><b data-i18n="skillsLabel">Skills:</b>
+            <span data-i18n="game2Skills">Linux Security, Bash Logic, Ethical Hacking, Problem-Solving, Awareness</span>
+          </p>
+          <p><span style="color:var(--muted);font-weight:900" data-i18n="tech">Tech:</span>
+            <span style="color:var(--muted)">JavaScript, HTML, CSS</span>
+          </p>
+          <div class="row">
+            <a class="btn primary magnetic" href="hack-the-machine.html">
+              <span data-i18n="game2Btn">💻 Hack the Machine</span>
+              <span class="shine" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="reveal">
+      <div class="section-title">
+        <h2 data-i18n="projectsTitle">📂 Projects</h2>
+        <p data-i18n="projectsSub">Curated, practical & production-friendly</p>
+      </div>
+
+      <div class="grid">
+        <div class="card tilt col-12" data-tilt>
+          <h3 data-i18n="proj1Title">🔧 Automation Scripts</h3>
+          <p data-i18n="proj1Text">
+            Collection of real-world Bash automation scripts used for system monitoring,
+            cleanup, backups, service health checks, and security auditing.
+          </p>
+
+          <ul class="links-list">
+            <li>📊 <a class="inline" href="https://sayyadimranali.github.io/disk_monitor.txt" target="_blank" rel="noreferrer">Disk Usage Monitor</a></li>
+            <li>🧹 <a class="inline" href="https://sayyadimranali.github.io/log_cleanup.txt" target="_blank" rel="noreferrer">Log Cleanup Script</a></li>
+            <li>💾 <a class="inline" href="https://sayyadimranali.github.io/backup.txt" target="_blank" rel="noreferrer">Backup Automation</a></li>
+            <li>🔄 <a class="inline" href="https://sayyadimranali.github.io/service_monitor.txt" target="_blank" rel="noreferrer">Service Health Monitor</a></li>
+            <li>📈 <a class="inline" href="https://sayyadimranali.github.io/resource_monitor.txt" target="_blank" rel="noreferrer">Resource Monitor</a></li>
+            <li>🔐 <a class="inline" href="https://sayyadimranali.github.io/user_audit.txt" target="_blank" rel="noreferrer">User Security Audit</a></li>
+            <li>🚨 <a class="inline" href="https://sayyadimranali.github.io/ssh_alert.txt" target="_blank" rel="noreferrer">SSH Brute-Force Alert</a></li>
+          </ul>
+        </div>
+
+        <div class="card tilt col-12" data-tilt>
+          <h3 data-i18n="proj2Title">🧪 Linux Practice Labs</h3>
+          <p data-i18n="proj2Text">
+            Hands-on lab setups covering Linux services, security hardening,
+            troubleshooting, and real-world production scenarios.
+          </p>
+          <div class="row">
+            <span class="chip" data-i18n="lab1">Services</span>
+            <span class="chip" data-i18n="lab2">Hardening</span>
+            <span class="chip" data-i18n="lab3">Incident Simulation</span>
+            <span class="chip" data-i18n="lab4">Troubleshooting</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOG -->
+    <section id="blog" class="reveal">
+      <div class="section-title">
+        <h2 data-i18n="blogTitle">📝 Blog</h2>
+        <p data-i18n="blogSub">DevOps + Linux learnings (you can later link these to real pages)</p>
+      </div>
+
+      <div class="grid">
+        <article class="card tilt col-6" data-tilt>
+          <h3 data-i18n="b1Title">Incident Response on Linux: A Practical Checklist</h3>
+          <p data-i18n="b1Text">
+            A production-ready approach: triage, isolate, verify impact, collect evidence, and restore safely.
+            Includes commands and a calm workflow for real incidents.
+          </p>
+          <div class="blog-meta">
+            <span class="tag" data-i18n="bTag1">Linux</span>
+            <span class="tag" data-i18n="bTag2">Incident</span>
+            <span class="tag" data-i18n="bTag3">Ops</span>
+          </div>
+          <div class="read">
+            <small data-i18n="bRead1">5 min read</small>
+            <a href="#" onclick="alert('Create a separate HTML page for this post later (blog-incident-response.html).'); return false;" data-i18n="readMore">Read more →</a>
+          </div>
+        </article>
+
+        <article class="card tilt col-6" data-tilt>
+          <h3 data-i18n="b2Title">Docker Basics That Actually Matter in Production</h3>
+          <p data-i18n="b2Text">
+            Understanding images, volumes, logs, resource limits, health checks, and secure defaults.
+            Focus on what keeps systems stable under load.
+          </p>
+          <div class="blog-meta">
+            <span class="tag" data-i18n="bTag4">Docker</span>
+            <span class="tag" data-i18n="bTag5">DevOps</span>
+            <span class="tag" data-i18n="bTag6">Reliability</span>
+          </div>
+          <div class="read">
+            <small data-i18n="bRead2">6 min read</small>
+            <a href="#" onclick="alert('Create a separate HTML page for this post later (blog-docker-production.html).'); return false;" data-i18n="readMore">Read more →</a>
+          </div>
+        </article>
+
+        <article class="card tilt col-6" data-tilt>
+          <h3 data-i18n="b3Title">Bash Automation Patterns: From Scripts to Tooling</h3>
+          <p data-i18n="b3Text">
+            How to structure scripts: logging, config flags, exit codes, retries, and safe defaults.
+            Make Bash scripts maintainable and team-friendly.
+          </p>
+          <div class="blog-meta">
+            <span class="tag" data-i18n="bTag7">Bash</span>
+            <span class="tag" data-i18n="bTag8">Automation</span>
+            <span class="tag" data-i18n="bTag9">Best Practices</span>
+          </div>
+          <div class="read">
+            <small data-i18n="bRead3">7 min read</small>
+            <a href="#" onclick="alert('Create a separate HTML page for this post later (blog-bash-patterns.html).'); return false;" data-i18n="readMore">Read more →</a>
+          </div>
+        </article>
+
+        <article class="card tilt col-6" data-tilt>
+          <h3 data-i18n="b4Title">Monitoring 101: What to Track Before It Breaks</h3>
+          <p data-i18n="b4Text">
+            A simple monitoring strategy: CPU, RAM, disk IO, inodes, network errors, and service health.
+            Plus alerting tips to avoid noisy pages.
+          </p>
+          <div class="blog-meta">
+            <span class="tag" data-i18n="bTag10">Monitoring</span>
+            <span class="tag" data-i18n="bTag11">SRE</span>
+            <span class="tag" data-i18n="bTag12">Linux</span>
+          </div>
+          <div class="read">
+            <small data-i18n="bRead4">6 min read</small>
+            <a href="#" onclick="alert('Create a separate HTML page for this post later (blog-monitoring-101.html).'); return false;" data-i18n="readMore">Read more →</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="reveal">
+      <div class="section-title">
+        <h2 data-i18n="contactTitle">📬 Contact</h2>
+        <p data-i18n="contactSub">Let’s connect</p>
+      </div>
+
+      <div class="grid">
+        <div class="card tilt col-12" data-tilt>
+          <p>📧 <b data-i18n="emailLabel">Email:</b>
+            <a class="inline" href="mailto:sayyadimranali32@gmail.com">sayyadimranali32@gmail.com</a>
+          </p>
+          <p>📍 <b data-i18n="locLabel">Location:</b> <span data-i18n="locValue">Maharashtra, India</span></p>
+          <p>🔗 <b>LinkedIn:</b>
+            <a class="inline" href="https://www.linkedin.com/in/imranali-i9" target="_blank" rel="noreferrer">www.linkedin.com/in/imranali-i9</a>
+          </p>
+          <p>💻 <b>GitHub:</b>
+            <a class="inline" href="https://github.com/sayyadimranali" target="_blank" rel="noreferrer">github.com/sayyadimranali</a>
+          </p>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <a class="btn primary magnetic" href="mailto:sayyadimranali32@gmail.com">
+              <span data-i18n="sendEmail">✉️ Send Email</span>
+              <span class="shine" aria-hidden="true"></span>
+            </a>
+            <a class="btn magnetic" href="#top">
+              <span data-i18n="backTop">⬆️ Back to Top</span>
+              <span class="shine" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span data-i18n="footer">© 2025 Imran Ali | Built with Linux mindset 🐧</span>
+    </footer>
+  </div>
+
+  <!-- Three.js -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+
+  <script>
+    // -------------------- Background particles (fx) --------------------
+    const fx = document.getElementById('fx');
+    const fctx = fx.getContext('2d', { alpha: true });
+
+    let FW, FH, FDPR;
+    function fxResize(){
+      FDPR = Math.min(2, window.devicePixelRatio || 1);
+      FW = fx.width = Math.floor(innerWidth * FDPR);
+      FH = fx.height = Math.floor(innerHeight * FDPR);
+      fx.style.width = innerWidth + 'px';
+      fx.style.height = innerHeight + 'px';
+    }
+    window.addEventListener('resize', fxResize, { passive:true });
+    fxResize();
+
+    const frand = (a,b)=>a+Math.random()*(b-a);
+    const dots = [];
+    const DOTS = 85;
+    for(let i=0;i<DOTS;i++){
+      dots.push({
+        x: frand(0, FW),
+        y: frand(0, FH),
+        r: frand(1.2, 3.2) * FDPR,
+        vx: frand(-0.25, 0.25) * FDPR,
+        vy: frand(-0.20, 0.20) * FDPR,
+        a: frand(0.16, 0.52)
+      });
+    }
+
+    let t = 0;
+    function fxDraw(){
+      t += 0.004;
+      fctx.clearRect(0,0,FW,FH);
+
+      const isLight = document.documentElement.dataset.theme === 'light';
+      const c1 = isLight ? 'rgba(37,99,235,0.10)' : 'rgba(110,231,255,0.16)';
+      const c2 = isLight ? 'rgba(124,58,237,0.09)' : 'rgba(167,139,250,0.14)';
+
+      const g1x = (0.2 + 0.08*Math.sin(t*2.3)) * FW;
+      const g1y = (0.18 + 0.06*Math.cos(t*1.9)) * FH;
+      const g2x = (0.82 + 0.06*Math.cos(t*2.0)) * FW;
+      const g2y = (0.25 + 0.08*Math.sin(t*2.1)) * FH;
+
+      const grad1 = fctx.createRadialGradient(g1x,g1y, 0, g1x,g1y, 520*FDPR);
+      grad1.addColorStop(0, c1);
+      grad1.addColorStop(1, 'rgba(0,0,0,0)');
+      fctx.fillStyle = grad1; fctx.fillRect(0,0,FW,FH);
+
+      const grad2 = fctx.createRadialGradient(g2x,g2y, 0, g2x,g2y, 560*FDPR);
+      grad2.addColorStop(0, c2);
+      grad2.addColorStop(1, 'rgba(0,0,0,0)');
+      fctx.fillStyle = grad2; fctx.fillRect(0,0,FW,FH);
+
+      for(const p of dots){
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < -50) p.x = FW+50;
+        if(p.x > FW+50) p.x = -50;
+        if(p.y < -50) p.y = FH+50;
+        if(p.y > FH+50) p.y = -50;
+
+        fctx.beginPath();
+        fctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        fctx.fillStyle = isLight ? `rgba(15,23,42,${p.a*0.65})` : `rgba(255,255,255,${p.a})`;
+        fctx.fill();
+      }
+
+      for(let i=0;i<dots.length;i++){
+        for(let j=i+1;j<dots.length;j++){
+          const a = dots[i], b = dots[j];
+          const dx = a.x-b.x, dy = a.y-b.y;
+          const d = Math.sqrt(dx*dx + dy*dy);
+          if(d < 140*FDPR){
+            const alpha = (1 - d/(140*FDPR)) * (isLight ? 0.07 : 0.10);
+            fctx.strokeStyle = isLight ? `rgba(37,99,235,${alpha})` : `rgba(110,231,255,${alpha})`;
+            fctx.beginPath();
+            fctx.moveTo(a.x,a.y);
+            fctx.lineTo(b.x,b.y);
+            fctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(fxDraw);
+    }
+    fxDraw();
+
+    // -------------------- 3D Hero Scene (Three.js) --------------------
+    const heroCanvas = document.getElementById('hero3d');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 0.25, 5.4);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: heroCanvas,
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance"
+    });
+
+    function heroResize(){
+      const card = heroCanvas.closest('.hero-card');
+      const r = card.getBoundingClientRect();
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(Math.max(1, r.width), Math.max(1, r.height), false);
+      camera.aspect = r.width / r.height;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', heroResize, { passive:true });
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+    scene.add(ambient);
+
+    const key = new THREE.DirectionalLight(0xffffff, 0.95);
+    key.position.set(3, 3, 4);
+    scene.add(key);
+
+    const fill = new THREE.DirectionalLight(0xffffff, 0.45);
+    fill.position.set(-3, 1, 3);
+    scene.add(fill);
+
+    // Materials
+    const matGlass = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(0x66ccff),
+      roughness: 0.10,
+      metalness: 0.10,
+      transmission: 0.85,
+      thickness: 0.8,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.14,
+      ior: 1.35,
+      transparent: true,
+      opacity: 0.96
+    });
+
+    const matNeon = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(0xa78bfa),
+      roughness: 0.15,
+      metalness: 0.40,
+      emissive: new THREE.Color(0x6ee7ff),
+      emissiveIntensity: 0.55
+    });
+
+    const matMetal = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(0x9aa4b2),
+      roughness: 0.32,
+      metalness: 0.85
+    });
+
+    // Group
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const coreGeo = new THREE.IcosahedronGeometry(1.05, 2);
+    const core = new THREE.Mesh(coreGeo, matGlass);
+    core.position.set(-0.7, 0.2, 0);
+    group.add(core);
+
+    const ringGeo = new THREE.TorusGeometry(1.55, 0.065, 18, 140);
+    const ring1 = new THREE.Mesh(ringGeo, matNeon);
+    ring1.rotation.set(0.6, 0.0, 0.2);
+    ring1.position.set(-0.7, 0.2, 0);
+    group.add(ring1);
+
+    const ring2 = new THREE.Mesh(ringGeo, matNeon);
+    ring2.scale.set(0.82, 0.82, 0.82);
+    ring2.rotation.set(-0.45, 0.55, -0.2);
+    ring2.position.set(-0.7, 0.2, 0);
+    group.add(ring2);
+
+    // "Server bars"
+    const bars = new THREE.Group();
+    bars.position.set(1.55, -0.1, -0.25);
+    group.add(bars);
+
+    const barGeo = new THREE.BoxGeometry(0.18, 1.6, 0.18);
+    for(let i=0;i<7;i++){
+      const b = new THREE.Mesh(barGeo, matMetal);
+      b.position.set((i-3)*0.23, 0, (i%2===0 ? 0.06 : -0.06));
+      b.rotation.y = (i-3) * 0.07;
+      bars.add(b);
+    }
+
+    // 3D particles
+    const ptsCount = 220;
+    const ptsGeo = new THREE.BufferGeometry();
+    const positions = new Float32Array(ptsCount * 3);
+    for(let i=0;i<ptsCount;i++){
+      const ix = i*3;
+      positions[ix+0] = (Math.random()*2-1)*3.4;
+      positions[ix+1] = (Math.random()*2-1)*1.8;
+      positions[ix+2] = (Math.random()*2-1)*1.6 - 0.8;
+    }
+    ptsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const ptsMat = new THREE.PointsMaterial({ size: 0.03, color: 0xffffff, transparent: true, opacity: 0.55 });
+    const pts = new THREE.Points(ptsGeo, ptsMat);
+    scene.add(pts);
+
+    // Mouse parallax
+    let mx = 0, my = 0;
+    function onMove(e){
+      const rect = heroCanvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      mx = (x - 0.5);
+      my = (y - 0.5);
+    }
+    const heroCard = heroCanvas.closest('.hero-card');
+    heroCard.addEventListener('mousemove', onMove, { passive:true });
+    heroCard.addEventListener('mouseleave', ()=>{ mx = 0; my = 0; }, { passive:true });
+
+    function applyThemeTo3D(){
+      const isLight = document.documentElement.dataset.theme === 'light';
+      matGlass.color.set(isLight ? 0x2563eb : 0x66ccff);
+      matNeon.color.set(isLight ? 0x7c3aed : 0xa78bfa);
+      matNeon.emissive.set(isLight ? 0x2563eb : 0x6ee7ff);
+      matNeon.emissiveIntensity = isLight ? 0.28 : 0.55;
+
+      ptsMat.color.set(isLight ? 0x0f172a : 0xffffff);
+      ptsMat.opacity = isLight ? 0.30 : 0.55;
+      ambient.intensity = isLight ? 0.70 : 0.55;
+    }
+
+    let rt = 0;
+    function animate3D(){
+      rt += 0.01;
+      group.rotation.y = rt * 0.35 + mx * 0.8;
+      group.rotation.x = Math.sin(rt*0.4) * 0.12 - my * 0.45;
+      group.position.y = Math.sin(rt*0.55) * 0.10;
+      ring1.rotation.z += 0.006;
+      ring2.rotation.z -= 0.004;
+      pts.rotation.y += 0.0008;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate3D);
+    }
+
+    requestAnimationFrame(()=>{
+      heroResize();
+      applyThemeTo3D();
+      animate3D();
+    });
+
+    // -------------------- 3D Tilt Cards --------------------
+    const tiltEls = document.querySelectorAll('[data-tilt]');
+    tiltEls.forEach(el=>{
+      el.addEventListener('mousemove', (e)=>{
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width/2;
+        const cy = r.top + r.height/2;
+        const dx = (e.clientX - cx) / (r.width/2);
+        const dy = (e.clientY - cy) / (r.height/2);
+        const rx = (-dy * 7).toFixed(2);
+        const ry = ( dx * 10).toFixed(2);
+        el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+      }, { passive:true });
+      el.addEventListener('mouseleave', ()=>{
+        el.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+      });
+    });
+
+    // -------------------- Magnetic buttons --------------------
+    const magnets = document.querySelectorAll('.magnetic');
+    magnets.forEach(btn=>{
+      btn.addEventListener('mousemove', (e)=>{
+        const r = btn.getBoundingClientRect();
+        const x = e.clientX - (r.left + r.width/2);
+        const y = e.clientY - (r.top + r.height/2);
+        btn.style.transform = `translate(${x*0.07}px, ${y*0.10}px) translateY(-2px)`;
+      }, { passive:true });
+      btn.addEventListener('mouseleave', ()=>{ btn.style.transform = ''; });
+    });
+
+    // -------------------- Reveal on scroll --------------------
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('show'); });
+    }, { threshold: 0.12 });
+    reveals.forEach(el=>io.observe(el));
+
+    // Smooth anchor scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const id = a.getAttribute('href');
+        const target = document.querySelector(id);
+        if(target){
+          e.preventDefault();
+          target.scrollIntoView({ behavior:'smooth', block:'start' });
+        }
+      });
+    });
+
+    // -------------------- Theme toggle --------------------
+    const themeBtn = document.getElementById('themeBtn');
+    const themeIcon = document.getElementById('themeIcon');
+
+    function setTheme(theme){
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem('theme', theme);
+      themeIcon.textContent = (theme === 'light') ? '☀️' : '🌙';
+      applyThemeTo3D();
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if(savedTheme === 'light' || savedTheme === 'dark') setTheme(savedTheme);
+
+    themeBtn.addEventListener('click', ()=>{
+      const next = (document.documentElement.dataset.theme === 'dark') ? 'light' : 'dark';
+      setTheme(next);
+    });
+
+    // -------------------- Language toggle --------------------
+    const langSelect = document.getElementById('langSelect');
+
+    const I18N = {
+      en: {
+        name: "Imran Ali",
+        roleSmall: "Linux Administrator • DevOps • Automation",
+        navAbout: "About",
+        navSkills: "Skills",
+        navGames: "Games",
+        navProjects: "Projects",
+        navBlog: "Blog",
+        navContact: "Contact",
+        theme: "Theme",
+
+        heroKicker: "Available for roles • Maharashtra, India",
+        heroTitle: "Imran Ali",
+        heroSubtitle: "Linux Administrator who loves production-grade reliability, automation, and DevOps engineering. I build practical tools and learn by experimenting.",
+        ctaProjects: "🚀 View Projects",
+        ctaEmail: "📧 Email Me",
+        ctaGitHub: "💻 GitHub",
+        focus1: "RHEL / Ubuntu / SUSE",
+        focus2: "Automation",
+        focus3: "Containers",
+        focus4: "Infra Reliability",
+
+        bringTitle: "What I bring",
+        bringSub: "Production mindset + calm incident handling",
+        p1t: "System Admin",
+        p1s: "Hardening • Services • Monitoring",
+        p2t: "Automation",
+        p2s: "Bash • Repeatable ops",
+        p3t: "DevOps",
+        p3s: "Docker • CI basics",
+        p4t: "Cloud",
+        p4s: "AWS • GCP • DO",
+        ctaGames: "🎮 Try Interactive Games",
+
+        aboutTitle: "👨‍💻 About Me",
+        aboutSub: "Clean ops • Secure systems • Fast troubleshooting",
+        aboutCardTitle: "Production-first Linux Administrator",
+        aboutCardText: "I manage production servers, troubleshoot incidents, automate repetitive tasks, and maintain secure, reliable systems. I enjoy building practical tools and learning through experimentation.",
+
+        skillsTitle: "🛠️ Skills",
+        skillsSub: "Hover the chips",
+
+        gamesTitle: "🎮 Interactive Terminal Games",
+        gamesSub: "3D cards • smooth interactions",
+        game1Title: "Linux Survival Game",
+        game1Text: "A terminal-style interactive game inspired by real Linux production incidents. Players choose the correct Linux command to keep production running.",
+        game1Btn: "▶️ Play Linux Survival Game",
+        game2Title: "Hack the Machine (Interactive Simulation)",
+        game2Text: "A terminal-style, educational hacking simulation designed to demonstrate ethical hacking concepts in a safe and fictional environment.",
+        skillsLabel: "Skills:",
+        game2Skills: "Linux Security, Bash Logic, Ethical Hacking, Problem-Solving, Awareness",
+        game2Btn: "💻 Hack the Machine",
+        tech: "Tech:",
+
+        projectsTitle: "📂 Projects",
+        projectsSub: "Curated, practical & production-friendly",
+        proj1Title: "🔧 Automation Scripts",
+        proj1Text: "Collection of real-world Bash automation scripts used for system monitoring, cleanup, backups, service health checks, and security auditing.",
+        proj2Title: "🧪 Linux Practice Labs",
+        proj2Text: "Hands-on lab setups covering Linux services, security hardening, troubleshooting, and real-world production scenarios.",
+        lab1: "Services",
+        lab2: "Hardening",
+        lab3: "Incident Simulation",
+        lab4: "Troubleshooting",
+
+        blogTitle: "📝 Blog",
+        blogSub: "DevOps + Linux learnings (you can later link these to real pages)",
+        b1Title: "Incident Response on Linux: A Practical Checklist",
+        b1Text: "A production-ready approach: triage, isolate, verify impact, collect evidence, and restore safely. Includes commands and a calm workflow for real incidents.",
+        b2Title: "Docker Basics That Actually Matter in Production",
+        b2Text: "Understanding images, volumes, logs, resource limits, health checks, and secure defaults. Focus on what keeps systems stable under load.",
+        b3Title: "Bash Automation Patterns: From Scripts to Tooling",
+        b3Text: "How to structure scripts: logging, config flags, exit codes, retries, and safe defaults. Make Bash scripts maintainable and team-friendly.",
+        b4Title: "Monitoring 101: What to Track Before It Breaks",
+        b4Text: "A simple monitoring strategy: CPU, RAM, disk IO, inodes, network errors, and service health. Plus alerting tips to avoid noisy pages.",
+        bTag1: "Linux", bTag2: "Incident", bTag3: "Ops",
+        bTag4: "Docker", bTag5: "DevOps", bTag6: "Reliability",
+        bTag7: "Bash", bTag8: "Automation", bTag9: "Best Practices",
+        bTag10:"Monitoring", bTag11:"SRE", bTag12:"Linux",
+        bRead1:"5 min read", bRead2:"6 min read", bRead3:"7 min read", bRead4:"6 min read",
+        readMore:"Read more →",
+
+        contactTitle: "📬 Contact",
+        contactSub: "Let’s connect",
+        emailLabel: "Email:",
+        locLabel: "Location:",
+        locValue: "Maharashtra, India",
+        sendEmail: "✉️ Send Email",
+        backTop: "⬆️ Back to Top",
+
+        footer: "© 2025 Imran Ali | Built with Linux mindset 🐧"
+      },
+
+      hi: {
+        name: "इमरान अली",
+        roleSmall: "लिनक्स एडमिन • DevOps • ऑटोमेशन",
+        navAbout: "परिचय",
+        navSkills: "कौशल",
+        navGames: "गेम्स",
+        navProjects: "प्रोजेक्ट्स",
+        navBlog: "ब्लॉग",
+        navContact: "संपर्क",
+        theme: "थीम",
+
+        heroKicker: "भूमिकाओं के लिए उपलब्ध • महाराष्ट्र, भारत",
+        heroTitle: "इमरान अली",
+        heroSubtitle: "मैं एक Linux Administrator हूँ जिसे production reliability, automation और DevOps engineering पसंद है। मैं practical tools बनाता हूँ और experimentation से सीखता हूँ।",
+        ctaProjects: "🚀 प्रोजेक्ट्स देखें",
+        ctaEmail: "📧 ईमेल करें",
+        ctaGitHub: "💻 GitHub",
+        focus1: "RHEL / Ubuntu / SUSE",
+        focus2: "ऑटोमेशन",
+        focus3: "कंटेनर्स",
+        focus4: "Infra Reliability",
+
+        bringTitle: "मैं क्या लाता हूँ",
+        bringSub: "Production mindset + incident handling में calm approach",
+        p1t: "System Admin",
+        p1s: "Hardening • Services • Monitoring",
+        p2t: "Automation",
+        p2s: "Bash • Repeatable ops",
+        p3t: "DevOps",
+        p3s: "Docker • CI basics",
+        p4t: "Cloud",
+        p4s: "AWS • GCP • DO",
+        ctaGames: "🎮 इंटरैक्टिव गेम्स",
+
+        aboutTitle: "👨‍💻 परिचय",
+        aboutSub: "Clean ops • Secure systems • Fast troubleshooting",
+        aboutCardTitle: "Production-first Linux Administrator",
+        aboutCardText: "मैं production servers manage करता हूँ, incidents troubleshoot करता हूँ, repetitive tasks automate करता हूँ, और systems को secure व reliable रखता हूँ। मुझे practical tools बनाना और experimentation से सीखना पसंद है।",
+
+        skillsTitle: "🛠️ कौशल",
+        skillsSub: "चिप्स पर hover करें",
+
+        gamesTitle: "🎮 इंटरैक्टिव टर्मिनल गेम्स",
+        gamesSub: "3D cards • smooth interactions",
+        game1Title: "Linux Survival Game",
+        game1Text: "Real Linux production incidents से inspired terminal-style game। सही Linux commands चुनकर production चलाते रहें।",
+        game1Btn: "▶️ Linux Survival Game खेलें",
+        game2Title: "Hack the Machine (Simulation)",
+        game2Text: "Safe और fictional environment में ethical hacking concepts समझाने के लिए educational terminal-style simulation।",
+        skillsLabel: "Skills:",
+        game2Skills: "Linux Security, Bash Logic, Ethical Hacking, Problem-Solving, Awareness",
+        game2Btn: "💻 Hack the Machine",
+        tech: "Tech:",
+
+        projectsTitle: "📂 प्रोजेक्ट्स",
+        projectsSub: "Curated, practical & production-friendly",
+        proj1Title: "🔧 Automation Scripts",
+        proj1Text: "System monitoring, cleanup, backups, service health checks और security auditing के लिए real-world Bash scripts का collection।",
+        proj2Title: "🧪 Linux Practice Labs",
+        proj2Text: "Linux services, security hardening, troubleshooting और real-world production scenarios के लिए hands-on labs।",
+        lab1: "Services",
+        lab2: "Hardening",
+        lab3: "Incident Simulation",
+        lab4: "Troubleshooting",
+
+        blogTitle: "📝 ब्लॉग",
+        blogSub: "DevOps + Linux learnings (बाद में real pages link कर सकते हैं)",
+        b1Title: "Linux Incident Response: Practical Checklist",
+        b1Text: "Triage, isolate, impact verify, evidence collect, और safe restore का production-ready flow। Useful commands के साथ।",
+        b2Title: "Docker Basics जो Production में काम आते हैं",
+        b2Text: "Images, volumes, logs, resource limits, health checks और secure defaults — stability पर focus।",
+        b3Title: "Bash Automation Patterns: Script से Tooling तक",
+        b3Text: "Logging, config flags, exit codes, retries, safe defaults — Bash scripts को maintainable बनाएं।",
+        b4Title: "Monitoring 101: क्या Track करें",
+        b4Text: "CPU, RAM, disk IO, inodes, network errors और service health — noise-free alerting tips के साथ।",
+        bTag1: "Linux", bTag2: "Incident", bTag3: "Ops",
+        bTag4: "Docker", bTag5: "DevOps", bTag6: "Reliability",
+        bTag7: "Bash", bTag8: "Automation", bTag9: "Best Practices",
+        bTag10:"Monitoring", bTag11:"SRE", bTag12:"Linux",
+        bRead1:"5 मिनट", bRead2:"6 मिनट", bRead3:"7 मिनट", bRead4:"6 मिनट",
+        readMore:"और पढ़ें →",
+
+        contactTitle: "📬 संपर्क",
+        contactSub: "Connect करें",
+        emailLabel: "Email:",
+        locLabel: "Location:",
+        locValue: "महाराष्ट्र, भारत",
+        sendEmail: "✉️ ईमेल भेजें",
+        backTop: "⬆️ ऊपर जाएँ",
+
+        footer: "© 2025 Imran Ali | Built with Linux mindset 🐧"
+      }
+    };
+
+    function applyLang(lang){
+      document.documentElement.dataset.lang = lang;
+      localStorage.setItem('lang', lang);
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key = el.getAttribute('data-i18n');
+        if(I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+      });
+    }
+
+    const savedLang = localStorage.getItem('lang') || 'en';
+    langSelect.value = (savedLang === 'hi') ? 'hi' : 'en';
+    applyLang(langSelect.value);
+
+    langSelect.addEventListener('change', ()=> applyLang(langSelect.value));
+
+    // Keep hero canvas sized correctly
+    const ro = new ResizeObserver(()=> heroResize());
+    ro.observe(document.querySelector('.hero-card'));
+  </script>
+</body>
+</html>
