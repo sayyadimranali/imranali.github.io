@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Bash Automation Patterns: From Scripts to Tooling | Imran Ali</title>
+  <meta name="description" content="Practical Bash automation patterns used in real production: idempotency, logging, error handling, modular design, and evolving scripts into reliable tools." />
+
+  <style>
+    :root{
+      --bg:#070A10;
+      --panel: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.90);
+      --muted: rgba(255,255,255,.62);
+      --accent:#6EE7FF;
+      --accent2:#A78BFA;
+      --good:#2ee59d;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --radius: 18px;
+      --shadow: 0 18px 55px rgba(0,0,0,.52);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(167,139,250,.20), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(110,231,255,.18), transparent 52%),
+        radial-gradient(900px 700px at 55% 90%, rgba(46,229,157,.12), transparent 55%),
+        linear-gradient(180deg, var(--bg), #0b1220 65%, rgba(0,0,0,.65));
+      overflow-x:hidden;
+    }
+    a{color:var(--accent); text-decoration:none; font-weight:900}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1180px;margin:0 auto;padding:18px 18px 80px}
+
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      margin: 10px 0 16px;
+    }
+    .brand{display:flex; align-items:center; gap:10px}
+    .logo{
+      width:40px;height:40px;border-radius:16px;
+      background: radial-gradient(circle at 30% 30%, rgba(110,231,255,.95), rgba(167,139,250,.70), rgba(46,229,157,.35));
+      border:1px solid var(--border);
+      box-shadow: 0 12px 35px rgba(110,231,255,.15);
+    }
+    .brand b{display:block}
+    .brand small{display:block;color:var(--muted)}
+
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 950;
+      cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      text-decoration:none;
+    }
+    .btn.primary{
+      border-color: rgba(110,231,255,.35);
+      background: linear-gradient(135deg, rgba(110,231,255,.16), rgba(167,139,250,.12));
+    }
+
+    .progress{
+      position:fixed; top:0; left:0; right:0; height:4px;
+      background: rgba(255,255,255,.08);
+      z-index:9999;
+    }
+    .progress > div{
+      height:100%; width:0%;
+      background: linear-gradient(90deg, rgba(110,231,255,.9), rgba(167,139,250,.85), rgba(46,229,157,.8));
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:14px;
+    }
+    @media (max-width: 1050px){
+      .grid{grid-template-columns:1fr}
+      .sticky{position:relative}
+    }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hd{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(135deg, rgba(110,231,255,.12), rgba(167,139,250,.10));
+      display:flex; justify-content:space-between;
+    }
+    .bd{padding:16px}
+
+    .hero h1{
+      font-size: 34px;
+      margin: 4px 0 10px;
+    }
+    .meta{
+      display:flex; gap:8px; flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .content{
+      font-size: 15px;
+      line-height: 1.8;
+      color: rgba(255,255,255,.84);
+    }
+    .content h2{margin:26px 0 10px}
+    .content h3{margin:18px 0 8px}
+    .content ul{padding-left:18px}
+
+    pre{
+      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:12px;
+      overflow:auto;
+      position:relative;
+    }
+    code{
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size:13px;
+      color: rgba(255,255,255,.86);
+    }
+    .copyBtn{
+      position:absolute;
+      top:10px; right:10px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      cursor:pointer;
+      font-weight:900;
+    }
+
+    .callout{
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .good{border-color: rgba(46,229,157,.30); background: rgba(46,229,157,.08)}
+    .warn{border-color: rgba(255,204,102,.30); background: rgba(255,204,102,.08)}
+
+    .sticky{position:sticky; top:14px}
+    .toc a{
+      display:block;
+      padding:8px 10px;
+      margin:6px 0;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      font-weight:900;
+      color: rgba(255,255,255,.82);
+    }
+    .toc a.active{
+      border-color: rgba(110,231,255,.40);
+      background: rgba(110,231,255,.08);
+    }
+
+    footer{
+      margin-top:18px;
+      text-align:center;
+      color: var(--muted);
+      font-size:12px;
+      font-weight:850;
+    }
+    html{scroll-behavior:smooth}
+  </style>
+</head>
+<body>
+
+<div class="progress"><div id="pbar"></div></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <b>Imran Ali • Blog</b>
+        <small>Bash • Linux • Automation</small>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px">
+      <a class="btn" href="index.html">⬅ Back</a>
+      <a class="btn primary" href="linux-labs.html">🧪 Practice Labs</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Article -->
+    <article class="card">
+      <div class="hd">
+        <span class="pill">Bash</span>
+        <span class="pill">Automation</span>
+        <span class="pill">~9 min read</span>
+      </div>
+
+      <div class="bd hero">
+        <h1>Bash Automation Patterns: From Scripts to Tooling</h1>
+        <div class="meta">
+          <span>By <b>Imran Ali</b></span>
+          <span>•</span>
+          <span id="today"></span>
+        </div>
+
+        <div class="content">
+          <div class="callout warn">
+            <b>Truth:</b> Most production outages caused by automation are not due to Bash itself —
+            they happen because scripts grow without structure.
+          </div>
+
+          <p>
+            Bash automation often starts as a one-liner and silently evolves into a
+            <b>critical production dependency</b>.
+            This article covers the <b>patterns</b> that turn fragile scripts into reliable tools.
+          </p>
+
+          <h2 id="mindset">1) Treat scripts as production code</h2>
+          <ul>
+            <li>Every script will be reused</li>
+            <li>Every script will fail at the worst time</li>
+            <li>Every script will be run by someone else</li>
+          </ul>
+
+          <div class="callout good">
+            <b>Rule:</b> If it runs in cron or CI/CD, it deserves structure.
+          </div>
+
+          <h2 id="structure">2) Standard script structure</h2>
+          <pre><button class="copyBtn">Copy</button><code>#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_NAME="$(basename "$0")"
+LOG_FILE="/var/log/${SCRIPT_NAME}.log"</code></pre>
+
+          <h2 id="logging">3) Logging beats echo</h2>
+          <pre><button class="copyBtn">Copy</button><code>log() {
+  echo "$(date '+%F %T') | $1" | tee -a "$LOG_FILE"
+}
+
+log "Backup started"</code></pre>
+
+          <h2 id="errors">4) Fail fast and loudly</h2>
+          <pre><button class="copyBtn">Copy</button><code>set -euo pipefail
+trap 'echo "Error on line $LINENO"; exit 1' ERR</code></pre>
+
+          <div class="callout warn">
+            <b>Anti-pattern:</b> Ignoring exit codes with <code>command || true</code> everywhere.
+          </div>
+
+          <h2 id="idempotent">5) Idempotency: safe to re-run</h2>
+          <pre><button class="copyBtn">Copy</button><code># Bad
+useradd appuser
+
+# Good
+id appuser &>/dev/null || useradd appuser</code></pre>
+
+          <h2 id="functions">6) Functions over copy-paste</h2>
+          <pre><button class="copyBtn">Copy</button><code>check_service() {
+  systemctl is-active --quiet "$1" || systemctl restart "$1"
+}
+
+check_service nginx</code></pre>
+
+          <h2 id="config">7) Config over hardcoding</h2>
+          <pre><button class="copyBtn">Copy</button><code>CONFIG_FILE="/etc/mytool.conf"
+source "$CONFIG_FILE"</code></pre>
+
+          <h2 id="tooling">8) When scripts become tools</h2>
+          <ul>
+            <li>Multiple flags</li>
+            <li>Help text</li>
+            <li>Dry-run mode</li>
+          </ul>
+
+          <pre><button class="copyBtn">Copy</button><code>usage() {
+  echo "Usage: $0 --backup | --cleanup | --status"
+}</code></pre>
+
+          <h2 id="migration">9) When to move beyond Bash</h2>
+          <ul>
+            <li>Complex data structures → Python</li>
+            <li>Large scale config mgmt → Ansible</li>
+            <li>Cloud orchestration → Terraform</li>
+          </ul>
+
+          <div class="callout good">
+            <b>Final takeaway:</b> Bash is excellent glue.
+            Use it to connect systems — not to replace full programming languages.
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- TOC -->
+    <aside class="card sticky">
+      <div class="hd"><b>Contents</b></div>
+      <div class="bd toc">
+        <a href="#mindset">Mindset</a>
+        <a href="#structure">Structure</a>
+        <a href="#logging">Logging</a>
+        <a href="#errors">Error handling</a>
+        <a href="#idempotent">Idempotency</a>
+        <a href="#functions">Functions</a>
+        <a href="#config">Configuration</a>
+        <a href="#tooling">Tooling</a>
+        <a href="#migration">Beyond Bash</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    © 2025 Imran Ali • Automate responsibly ⚙️
+  </footer>
+</div>
+
+<script>
+  document.getElementById("today").textContent =
+    new Date().toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
+
+  const pbar = document.getElementById("pbar");
+  window.addEventListener("scroll", ()=>{
+    const h = document.documentElement;
+    pbar.style.width =
+      (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + "%";
+  });
+
+  document.querySelectorAll(".copyBtn").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const code = btn.parentElement.querySelector("code").innerText;
+      await navigator.clipboard.writeText(code);
+      btn.textContent = "Copied";
+      setTimeout(()=>btn.textContent="Copy",1000);
+    };
+  });
+</script>
+</body>
+</html>
