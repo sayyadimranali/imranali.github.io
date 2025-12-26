@@ -1,334 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Linux Practice Labs | Imran Ali</title>
-  <style>
-    :root{
-      --bg:#070A10;
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(255,255,255,.10);
-      --border: rgba(255,255,255,.14);
-      --text: rgba(255,255,255,.90);
-      --muted: rgba(255,255,255,.62);
-      --accent:#6EE7FF;
-      --accent2:#A78BFA;
-      --good:#2ee59d;
-      --warn:#ffcc66;
-      --bad:#ff6b6b;
-      --radius: 18px;
-      --shadow: 0 25px 70px rgba(0,0,0,.55);
-      --shadow2: 0 15px 40px rgba(0,0,0,.45);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 800px at 15% 10%, rgba(167,139,250,.20), transparent 55%),
-        radial-gradient(900px 600px at 85% 20%, rgba(110,231,255,.18), transparent 52%),
-        radial-gradient(900px 700px at 55% 90%, rgba(46,229,157,.12), transparent 55%),
-        linear-gradient(180deg, var(--bg), #0b1220 65%, rgba(0,0,0,.65));
-      overflow-x:hidden;
-    }
-    a{color:var(--accent); text-decoration:none; font-weight:800}
-    a:hover{text-decoration:underline}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Linux Practice Labs (Learning Mode) | Imran Ali</title>
+<style>
+  :root{
+    --bg:#070A10;
+    --panel: rgba(255,255,255,.06);
+    --panel2: rgba(255,255,255,.10);
+    --border: rgba(255,255,255,.14);
+    --text: rgba(255,255,255,.90);
+    --muted: rgba(255,255,255,.62);
+    --accent:#6EE7FF;
+    --accent2:#A78BFA;
+    --good:#2ee59d;
+    --warn:#ffcc66;
+    --bad:#ff6b6b;
+    --radius: 18px;
+    --shadow: 0 25px 70px rgba(0,0,0,.55);
+    --shadow2: 0 15px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    color:var(--text);
+    background:
+      radial-gradient(1200px 800px at 15% 10%, rgba(167,139,250,.20), transparent 55%),
+      radial-gradient(900px 600px at 85% 20%, rgba(110,231,255,.18), transparent 52%),
+      radial-gradient(900px 700px at 55% 90%, rgba(46,229,157,.12), transparent 55%),
+      linear-gradient(180deg, var(--bg), #0b1220 65%, rgba(0,0,0,.65));
+    overflow-x:hidden;
+  }
+  a{color:var(--accent); text-decoration:none; font-weight:900}
+  a:hover{text-decoration:underline}
 
-    .wrap{max-width:1200px;margin:0 auto;padding:22px 18px 70px}
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      margin-bottom: 14px;
-    }
-    .brand{
-      display:flex; gap:10px; align-items:center;
-    }
-    .logo{
-      width:38px;height:38px;border-radius:14px;
-      background: radial-gradient(circle at 30% 30%, rgba(110,231,255,.95), rgba(167,139,250,.70), rgba(46,229,157,.35));
-      border:1px solid var(--border);
-      box-shadow: 0 12px 35px rgba(110,231,255,.15);
-    }
-    .brand b{display:block; letter-spacing:.2px}
-    .brand small{display:block;color:var(--muted); margin-top:2px}
+  .wrap{max-width:1280px;margin:0 auto;padding:18px 18px 80px}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-bottom: 12px;
+  }
+  .brand{display:flex; gap:10px; align-items:center}
+  .logo{
+    width:38px;height:38px;border-radius:14px;
+    background: radial-gradient(circle at 30% 30%, rgba(110,231,255,.95), rgba(167,139,250,.70), rgba(46,229,157,.35));
+    border:1px solid var(--border);
+    box-shadow: 0 12px 35px rgba(110,231,255,.15);
+  }
+  .brand b{display:block; letter-spacing:.2px}
+  .brand small{display:block;color:var(--muted); margin-top:2px}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 380px 1fr;
-      gap:14px;
-      align-items:start;
-    }
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
+  .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+  .btn{
+    border:1px solid var(--border);
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-weight: 950;
+    cursor:pointer;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    display:inline-flex; align-items:center; gap:8px;
+    user-select:none;
+  }
+  .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10); border-color: rgba(110,231,255,.22)}
+  .btn.primary{
+    border-color: rgba(110,231,255,.35);
+    background: linear-gradient(135deg, rgba(110,231,255,.16), rgba(167,139,250,.12));
+  }
+  .btn.danger{border-color: rgba(255,107,107,.35); background: rgba(255,107,107,.10)}
 
-    .card{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, var(--panel), rgba(255,255,255,.03));
-      box-shadow: var(--shadow2);
-      overflow:hidden;
-    }
-    .card .hd{
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: linear-gradient(135deg, rgba(110,231,255,.12), rgba(167,139,250,.10));
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .card .hd h2{margin:0;font-size:14px;letter-spacing:.2px}
-    .card .bd{padding:14px 16px}
+  .grid{
+    display:grid;
+    grid-template-columns: 420px 1fr;
+    gap:14px;
+    align-items:start;
+  }
+  @media (max-width: 1020px){ .grid{grid-template-columns:1fr} }
 
-    .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-weight: 900;
-      cursor:pointer;
-      transition: transform .2s ease, background .2s ease;
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
-    .btn.primary{
-      border-color: rgba(110,231,255,.35);
-      background: linear-gradient(135deg, rgba(110,231,255,.16), rgba(167,139,250,.12));
-    }
+  .card{
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--panel), rgba(255,255,255,.03));
+    box-shadow: var(--shadow2);
+    overflow:hidden;
+  }
+  .hd{
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(135deg, rgba(110,231,255,.12), rgba(167,139,250,.10));
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .hd h2{margin:0;font-size:14px;letter-spacing:.2px}
+  .bd{padding:14px 16px}
 
-    .labs{
-      display:grid;
-      gap:10px;
-    }
-    .lab{
-      padding: 12px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      cursor:pointer;
-      transition: transform .2s ease, background .2s ease, border-color .2s ease;
-    }
-    .lab:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.06);
-      border-color: rgba(110,231,255,.22);
-    }
-    .lab.active{
-      background: rgba(110,231,255,.08);
-      border-color: rgba(110,231,255,.35);
-    }
-    .lab b{display:block;font-size:13px}
-    .lab small{display:block;color:var(--muted); margin-top:4px; line-height:1.4}
+  .pill{
+    font-size: 11px;
+    font-weight: 950;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.05);
+    color: rgba(255,255,255,.84);
+    white-space:nowrap;
+  }
+  .pill.good{border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.08)}
+  .pill.warn{border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.08)}
+  .pill.bad{border-color: rgba(255,107,107,.35); background: rgba(255,107,107,.08)}
 
-    .metaRow{display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px}
-    .pill{
-      font-size: 11px;
-      font-weight: 900;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.84);
-    }
-    .pill.good{border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.08)}
-    .pill.warn{border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.08)}
-    .pill.bad{border-color: rgba(255,107,107,.35); background: rgba(255,107,107,.08)}
+  /* Sidebar: labs */
+  .sidebarTop{
+    display:grid;
+    gap:10px;
+    margin-bottom: 10px;
+  }
+  .statsRow{display:flex; gap:8px; flex-wrap:wrap}
+  .progressWrap{
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.04);
+  }
+  .bar{
+    height:10px;
+    border-radius:999px;
+    background: rgba(255,255,255,.08);
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.10);
+    margin-top:10px;
+  }
+  .bar > div{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, rgba(110,231,255,.85), rgba(167,139,250,.80), rgba(46,229,157,.75));
+    border-radius:999px;
+  }
 
-    /* Terminal */
-    .terminal{
-      min-height: 520px;
-      display:flex;
-      flex-direction:column;
-    }
-    .termTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.18);
-    }
-    .lights{display:flex; gap:8px}
-    .dot{width:10px;height:10px;border-radius:99px;opacity:.9}
-    .dot.r{background:#ff5f56}
-    .dot.y{background:#ffbd2e}
-    .dot.g{background:#27c93f}
-    .path{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      color: rgba(255,255,255,.75);
-      font-size: 12px;
-      font-weight: 800;
-    }
+  .filterRow{display:flex; gap:8px; flex-wrap:wrap}
+  .chip{
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    font-weight: 950;
+    font-size: 12px;
+    cursor:pointer;
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    user-select:none;
+  }
+  .chip:hover{transform: translateY(-1px); border-color: rgba(110,231,255,.25); background: rgba(255,255,255,.07)}
+  .chip.active{border-color: rgba(110,231,255,.45); background: rgba(110,231,255,.10)}
+  .search{
+    width:100%;
+    padding: 12px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.05);
+    color: var(--text);
+    outline:none;
+    font-weight: 900;
+  }
+  .search:focus{border-color: rgba(110,231,255,.35)}
 
-    .termOut{
-      padding: 14px 14px 6px;
-      flex:1;
-      overflow:auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 13px;
-      line-height: 1.55;
-    }
-    .line{white-space:pre-wrap; word-break:break-word}
-    .prompt{color: rgba(110,231,255,.95); font-weight:900}
-    .cmd{color: rgba(255,255,255,.92)}
-    .ok{color: rgba(46,229,157,.95); font-weight:900}
-    .warn{color: rgba(255,204,102,.95); font-weight:900}
-    .err{color: rgba(255,107,107,.95); font-weight:900}
-    .muted{color: rgba(255,255,255,.62)}
-    .hintBox{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(110,231,255,.20);
-      background: rgba(110,231,255,.06);
-      color: rgba(255,255,255,.80);
-      font-weight: 700;
-      font-size: 12px;
-      line-height: 1.5;
-    }
+  .labs{display:grid; gap:10px; max-height: 520px; overflow:auto; padding-right: 2px;}
+  .lab{
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.04);
+    cursor:pointer;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .lab:hover{transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(110,231,255,.22)}
+  .lab.active{background: rgba(110,231,255,.08); border-color: rgba(110,231,255,.40)}
+  .lab b{display:block;font-size:13px}
+  .lab small{display:block;color:var(--muted); margin-top:4px; line-height:1.4}
+  .lab .miniRow{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
 
-    .termIn{
-      display:flex;
-      gap:10px;
-      padding: 12px 14px 14px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.12);
-    }
-    .termIn input{
-      flex:1;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      color: var(--text);
-      outline:none;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-weight: 800;
-      font-size: 13px;
-    }
-    .termIn input:focus{border-color: rgba(110,231,255,.35)}
-    .footer{
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 12px;
-      text-align:center;
-    }
-    .kbd{
-      font-family: ui-monospace, monospace;
-      padding: 2px 6px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.86);
-      font-weight: 900;
-    }
-  </style>
+  /* Terminal */
+  .terminal{min-height: 640px; display:flex; flex-direction:column}
+  .termTop{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.18);
+  }
+  .lights{display:flex; gap:8px}
+  .dot{width:10px;height:10px;border-radius:99px;opacity:.9}
+  .dot.r{background:#ff5f56} .dot.y{background:#ffbd2e} .dot.g{background:#27c93f}
+  .path{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    color: rgba(255,255,255,.75);
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .termOut{
+    padding: 14px 14px 6px;
+    flex:1;
+    overflow:auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .line{white-space:pre-wrap; word-break:break-word}
+  .cmd{color: rgba(255,255,255,.92)}
+  .ok{color: rgba(46,229,157,.95); font-weight:900}
+  .warnText{color: rgba(255,204,102,.95); font-weight:900}
+  .err{color: rgba(255,107,107,.95); font-weight:900}
+  .muted{color: rgba(255,255,255,.62)}
+  .kbd{
+    font-family: ui-monospace, monospace;
+    padding: 2px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.86);
+    font-weight: 950;
+  }
+  .termIn{
+    display:flex;
+    gap:10px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.12);
+  }
+  .termIn input{
+    flex:1;
+    padding: 12px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.05);
+    color: var(--text);
+    outline:none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-weight: 900;
+    font-size: 13px;
+  }
+  .termIn input:focus{border-color: rgba(110,231,255,.35)}
+
+  /* Lab details panel */
+  .details{
+    margin-top: 12px;
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.04);
+  }
+  .details h3{margin:0 0 8px; font-size: 13px}
+  .details p{margin:6px 0; color: rgba(255,255,255,.74); font-size: 12px; line-height: 1.5}
+  .details .row{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+  .toggle{
+    display:flex; align-items:center; gap:8px;
+    cursor:pointer; user-select:none;
+    font-weight: 900; font-size: 12px; color: rgba(255,255,255,.80);
+  }
+  .toggle input{accent-color: #6ee7ff}
+  .box{
+    margin-top:10px;
+    padding: 10px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(110,231,255,.20);
+    background: rgba(110,231,255,.06);
+    color: rgba(255,255,255,.82);
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 1.5;
+    display:none;
+  }
+  .box.show{display:block}
+
+  .footer{
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align:center;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important}
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <b>Linux Practice Labs</b>
-          <small>Browser-based terminal • No server needed • Realistic practice</small>
-        </div>
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
-        <a class="btn" href="index.html">⬅ Back to Portfolio</a>
-        <button class="btn primary" id="resetBtn">♻ Reset Lab</button>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <b>Linux Practice Labs — Learning Mode</b>
+        <small>Interactive browser terminal • XP • badges • hints • solutions (no server)</small>
       </div>
     </div>
-
-    <div class="grid">
-      <!-- LEFT: Labs list -->
-      <div class="card">
-        <div class="hd">
-          <h2>Choose a Lab</h2>
-          <span class="pill" id="progressPill">0/6 Done</span>
-        </div>
-        <div class="bd">
-          <div class="labs" id="labList"></div>
-
-          <div class="hintBox" style="margin-top:12px">
-            Tip: Use <span class="kbd">help</span> to see supported commands.
-            You can also use <span class="kbd">hint</span> anytime.
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: Terminal -->
-      <div class="card terminal">
-        <div class="termTop">
-          <div class="lights" aria-hidden="true">
-            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-          </div>
-          <div class="path" id="pathLabel">imran@labs:~$</div>
-          <div style="display:flex; gap:8px; align-items:center">
-            <span class="pill" id="labLevelPill">Level: Beginner</span>
-            <span class="pill warn" id="labStatusPill">Not started</span>
-          </div>
-        </div>
-
-        <div class="termOut" id="out"></div>
-
-        <div class="termIn">
-          <input id="input" autocomplete="off" spellcheck="false" placeholder="Type a command… (ex: ls, cd, cat file.txt)" />
-          <button class="btn primary" id="runBtn">▶ Run</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      Built by Imran Ali • This is a simulated Linux environment for learning. Works offline once loaded.
+    <div class="actions">
+      <a class="btn" href="index.html">⬅ Back to Portfolio</a>
+      <button class="btn primary" id="resetLabBtn">♻ Reset Current Lab</button>
+      <button class="btn danger" id="wipeProgressBtn">🧨 Wipe Progress</button>
     </div>
   </div>
 
-  <script>
-    /***********************
-     *  Tiny Linux Simulator
-     ***********************/
-    const $ = (q)=>document.querySelector(q);
-    const out = $("#out");
-    const input = $("#input");
-    const runBtn = $("#runBtn");
-    const resetBtn = $("#resetBtn");
-    const pathLabel = $("#pathLabel");
-    const labList = $("#labList");
-    const progressPill = $("#progressPill");
-    const labStatusPill = $("#labStatusPill");
-    const labLevelPill = $("#labLevelPill");
+  <div class="grid">
+    <!-- LEFT -->
+    <div class="card">
+      <div class="hd">
+        <h2>Learning Dashboard</h2>
+        <div class="statsRow">
+          <span class="pill" id="donePill">0/15 Done</span>
+          <span class="pill good" id="xpPill">XP: 0</span>
+          <span class="pill" id="badgePill">Badges: 0</span>
+        </div>
+      </div>
 
-    // In-memory fake filesystem (simple)
-    function buildFS(){
-      return {
-        "/": { type:"dir", kids: {
-          "home": { type:"dir", kids: {
-            "imran": { type:"dir", kids: {
-              "readme.txt": { type:"file", data:
-`Welcome to Imran's Linux Practice Labs!
-Type: help  |  labs  |  hint
-Practice commands like ls, cd, cat, grep, find, ps, top, journalctl, chmod, etc.`},
-              "projects": { type:"dir", kids: {
-                "notes.md": { type:"file", data:
-`# Notes
-- Always check disk: df -h
-- Check logs: journalctl -xe
-- Use grep wisely`},
-                "backup.sh": { type:"file", data:
+      <div class="bd">
+        <div class="sidebarTop">
+          <div class="progressWrap">
+            <div style="display:flex; justify-content:space-between; gap:10px; align-items:center">
+              <b style="font-size:13px">Progress</b>
+              <span class="pill" id="levelPill">Level: Newbie</span>
+            </div>
+            <div class="bar"><div id="barFill"></div></div>
+            <div style="margin-top:10px; color:var(--muted); font-size:12px; font-weight:800">
+              Tip: Use <span class="kbd">help</span>, <span class="kbd">hint</span>, <span class="kbd">solution</span>, <span class="kbd">labs</span>, <span class="kbd">status</span>
+            </div>
+          </div>
+
+          <input class="search" id="search" placeholder="Search labs (ex: grep, permissions, find, pipe)..." />
+
+          <div class="filterRow" id="filters"></div>
+        </div>
+
+        <div class="labs" id="labList"></div>
+
+        <div class="details" id="labDetails">
+          <h3 id="labTitle">Select a lab</h3>
+          <p id="labGoal"></p>
+          <p id="labWhy"></p>
+
+          <div class="row">
+            <span class="pill" id="labDiffPill">Difficulty: -</span>
+            <span class="pill" id="labXpPill">XP: -</span>
+            <span class="pill warn" id="labStatusPill">Not completed</span>
+          </div>
+
+          <div style="margin-top:10px">
+            <label class="toggle"><input type="checkbox" id="showHint"> Show hint</label>
+            <div class="box" id="hintBox"></div>
+
+            <label class="toggle" style="margin-top:10px"><input type="checkbox" id="showSolution"> Show solution</label>
+            <div class="box" id="solutionBox"></div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="copyGoalBtn">📋 Copy Goal Commands</button>
+            <button class="btn primary" id="startLabBtn">🚀 Start Lab</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card terminal">
+      <div class="termTop">
+        <div class="lights" aria-hidden="true">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        </div>
+        <div class="path" id="pathLabel">imran@labs:~$</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end">
+          <span class="pill" id="activeLabPill">Lab: -</span>
+          <span class="pill warn" id="termStatusPill">Not started</span>
+        </div>
+      </div>
+
+      <div class="termOut" id="out"></div>
+
+      <div class="termIn">
+        <input id="input" autocomplete="off" spellcheck="false"
+               placeholder="Type commands… (try: help, labs, hint, status)" />
+        <button class="btn primary" id="runBtn">▶ Run</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Built by Imran Ali • Safe simulation • Works offline once loaded • Great for portfolio demos
+  </div>
+</div>
+
+<script>
+/**********************
+ * Learning Mode Labs
+ **********************/
+const $ = (q)=>document.querySelector(q);
+const out = $("#out");
+const input = $("#input");
+const runBtn = $("#runBtn");
+const resetLabBtn = $("#resetLabBtn");
+const wipeProgressBtn = $("#wipeProgressBtn");
+
+const labList = $("#labList");
+const pathLabel = $("#pathLabel");
+const activeLabPill = $("#activeLabPill");
+const termStatusPill = $("#termStatusPill");
+
+const donePill = $("#donePill");
+const xpPill = $("#xpPill");
+const badgePill = $("#badgePill");
+const levelPill = $("#levelPill");
+const barFill = $("#barFill");
+
+const labDetails = $("#labDetails");
+const labTitle = $("#labTitle");
+const labGoal = $("#labGoal");
+const labWhy = $("#labWhy");
+const labDiffPill = $("#labDiffPill");
+const labXpPill = $("#labXpPill");
+const labStatusPill = $("#labStatusPill");
+const showHint = $("#showHint");
+const showSolution = $("#showSolution");
+const hintBox = $("#hintBox");
+const solutionBox = $("#solutionBox");
+const startLabBtn = $("#startLabBtn");
+const copyGoalBtn = $("#copyGoalBtn");
+
+const search = $("#search");
+const filters = $("#filters");
+
+// Persistent storage
+const STORE_KEY = "imran_linux_labs_v2";
+const loadStore = ()=> {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }
+  catch { return {}; }
+};
+const saveStore = (obj)=> localStorage.setItem(STORE_KEY, JSON.stringify(obj));
+
+// Fake filesystem
+function buildFS(){
+  return {
+    "/": { type:"dir", kids: {
+      "home": { type:"dir", kids: {
+        "imran": { type:"dir", kids: {
+          "readme.txt": { type:"file", data:
+`Welcome to Linux Practice Labs (Learning Mode)!
+Type: help | labs | status | hint | solution
+You can use pipes:  cat file | grep ERROR
+And redirection:   echo hello > file.txt   or   echo hi >> file.txt
+`},
+          "projects": { type:"dir", kids: {
+            "notes.md": { type:"file", data:
+`# Ops Notes
+- df -h to check disk usage
+- journalctl -xe to check logs
+- grep ERROR /var/log/... for quick triage
+- chmod +x for scripts
+`},
+            "deploy.sh": { type:"file", data:
 `#!/bin/bash
-# simple backup
-tar -czf backup.tar.gz /home/imran/projects`},
-              }},
-              "labs": { type:"dir", kids: {
-                "lab1": { type:"dir", kids: {
-                  "welcome.txt": { type:"file", data:
-`Lab 1: Navigation Basics
-Goal: Move into ~/projects and list files.`}
-                }},
-                "lab2": { type:"dir", kids: {
-                  "server.log": { type:"file", data:
+echo "Deploy starting..."
+echo "Done."`},
+            "app.log": { type:"file", data:
+`INFO starting
+WARN cpu high
+ERROR database timeout
+INFO retry ok
+ERROR disk full on /var
+INFO shutdown`},
+          }},
+          "labs": { type:"dir", kids: {
+            "text": { type:"dir", kids: {
+              "words.txt": { type:"file", data:
+`alpha
+bravo
+charlie
+delta
+echo
+foxtrot
+golf
+hotel
+india
+juliet
+kilo
+lima
+mike
+november
+oscar
+papa
+quebec
+romeo
+sierra
+tango
+uniform
+victor
+whiskey
+xray
+yankee
+zulu`},
+              "server.log": { type:"file", data:
 `INFO boot ok
 INFO user=admin login ok
 WARN cpu high
@@ -336,551 +503,1078 @@ ERROR disk full on /var
 INFO cleanup done
 ERROR ssh brute attempt
 INFO done`},
-                }},
-                "lab3": { type:"dir", kids: {
-                  "app": { type:"dir", kids: {
-                    "config.yml": { type:"file", data:
-`app:
-  name: demo
-  debug: false
-  port: 8080`},
-                    "secret.txt": { type:"file", data:
-`TOP_SECRET=linux_is_fun`},
-                  }},
-                }},
-                "lab4": { type:"dir", kids: {
-                  "report.txt": { type:"file", data:
-`User Report:
-- incident: ssh brute force
-- action: blocked IP
-- status: resolved`},
-                }},
-                "lab5": { type:"dir", kids: {
-                  "scripts": { type:"dir", kids: {
-                    "clean.sh": { type:"file", data:
-`#!/bin/bash
-echo "cleaning logs..."`},
-                  }},
-                }},
-                "lab6": { type:"dir", kids: {
-                  "processes.txt": { type:"file", data:
+            }},
+            "fs": { type:"dir", kids: {
+              "dirA": { type:"dir", kids: {
+                "dirB": { type:"dir", kids: {
+                  "secret.txt": { type:"file", data: "TOP_SECRET=linux_is_fun" }
+                }}
+              }},
+              "tmp": { type:"dir", kids: {}},
+            }},
+            "permissions": { type:"dir", kids: {
+              "scripts": { type:"dir", kids: {
+                "clean.sh": { type:"file", data: "#!/bin/bash\necho \"cleaning logs...\"\n", executable:false },
+                "backup.sh": { type:"file", data: "#!/bin/bash\necho \"backup running...\"\n", executable:false },
+              }},
+            }},
+            "process": { type:"dir", kids: {
+              "processes.txt": { type:"file", data:
 `PID  CMD
 101  nginx
 202  sshd
 303  docker
 404  python
 505  node`},
-                }},
-              }},
+            }},
+            "redirection": { type:"dir", kids: {
+              "notes.txt": { type:"file", data: "initial\n" },
             }},
           }},
-          "var": { type:"dir", kids: {
-            "log": { type:"dir", kids: {
-              "auth.log": { type:"file", data:
+        }},
+      }},
+      "var": { type:"dir", kids: {
+        "log": { type:"dir", kids: {
+          "auth.log": { type:"file", data:
 `sshd[123]: Failed password for invalid user test
 sshd[123]: Failed password for invalid user root
 sshd[123]: Accepted password for imran
 sudo: imran : TTY=pts/0 ; COMMAND=/bin/systemctl restart nginx`},
-            }},
-          }},
-          "etc": { type:"dir", kids: {
-            "hosts": { type:"file", data:
+          "syslog": { type:"file", data:
+`kernel: boot complete
+systemd: started services
+nginx: started
+docker: started
+app: ERROR database timeout`},
+        }},
+      }},
+      "etc": { type:"dir", kids: {
+        "hosts": { type:"file", data:
 `127.0.0.1 localhost
 10.0.0.10 web01
 10.0.0.11 web02`},
-          }},
-        }}
-      };
+      }},
+    }}
+  };
+}
+
+let FS = buildFS();
+let cwd = "/home/imran";
+let history = [];
+let histIndex = -1;
+
+// Utilities
+const frand = (a,b)=>a+Math.random()*(b-a);
+function printLine(text, cls="line"){
+  const div = document.createElement("div");
+  div.className = "line " + cls;
+  div.textContent = text;
+  out.appendChild(div);
+  out.scrollTop = out.scrollHeight;
+}
+function promptLine(cmd){
+  const shown = cwd.replace("/home/imran","~");
+  printLine(`imran@labs:${shown}$ ${cmd}`, "cmd");
+}
+function norm(path){
+  if(!path || path.trim()==="") return cwd;
+  path = path.trim();
+  if(path === "~") path = "/home/imran";
+  if(path.startsWith("~/")) path = "/home/imran/" + path.slice(2);
+  if(!path.startsWith("/")){
+    path = (cwd.endsWith("/") ? cwd : cwd + "/") + path;
+  }
+  const parts = [];
+  for(const seg of path.split("/")){
+    if(!seg || seg === ".") continue;
+    if(seg === ".."){ parts.pop(); continue; }
+    parts.push(seg);
+  }
+  return "/" + parts.join("/");
+}
+function getNode(path){
+  path = norm(path);
+  const parts = path.split("/").filter(Boolean);
+  let node = FS["/"];
+  if(parts.length===0) return node;
+  for(const p of parts){
+    if(!node || node.type!=="dir") return null;
+    node = node.kids[p];
+  }
+  return node || null;
+}
+function parentPath(path){
+  path = norm(path);
+  if(path === "/") return "/";
+  const parts = path.split("/").filter(Boolean);
+  parts.pop();
+  return "/" + parts.join("/");
+}
+function baseName(path){
+  const p = norm(path).split("/").filter(Boolean);
+  return p.length ? p[p.length-1] : "/";
+}
+function ensureDir(path){
+  const node = getNode(path);
+  return node && node.type==="dir" ? node : null;
+}
+function ensureFile(path){
+  const node = getNode(path);
+  return node && node.type==="file" ? node : null;
+}
+function setPathLabel(){
+  pathLabel.textContent = `imran@labs:${cwd.replace("/home/imran","~")}$`;
+}
+
+// File ops
+function writeFile(path, content, append=false){
+  const full = norm(path);
+  const dir = parentPath(full);
+  const dirNode = ensureDir(dir);
+  if(!dirNode) return {ok:false, msg:`write: cannot write to '${path}': No such directory`};
+  const name = baseName(full);
+  if(dirNode.kids[name] && dirNode.kids[name].type !== "file"){
+    return {ok:false, msg:`write: '${path}' is not a file`};
+  }
+  if(!dirNode.kids[name]){
+    dirNode.kids[name] = { type:"file", data:"", executable:false };
+  }
+  const f = dirNode.kids[name];
+  f.data = append ? (f.data + content) : content;
+  return {ok:true, msg:""};
+}
+function removePath(path){
+  const full = norm(path);
+  if(full === "/" || full === "/home" || full === "/home/imran") return {ok:false, msg:`rm: cannot remove '${path}'`};
+  const dir = parentPath(full);
+  const dirNode = ensureDir(dir);
+  if(!dirNode) return {ok:false, msg:`rm: cannot remove '${path}': No such file or directory`};
+  const name = baseName(full);
+  if(!dirNode.kids[name]) return {ok:false, msg:`rm: cannot remove '${path}': No such file or directory`};
+  delete dirNode.kids[name];
+  return {ok:true, msg:""};
+}
+function copyPath(src, dst){
+  const s = getNode(src);
+  if(!s) return {ok:false, msg:`cp: cannot stat '${src}': No such file or directory`};
+  const dFull = norm(dst);
+  const dDir = parentPath(dFull);
+  const dDirNode = ensureDir(dDir);
+  if(!dDirNode) return {ok:false, msg:`cp: cannot copy to '${dst}': No such directory`};
+  const name = baseName(dFull);
+  if(s.type==="dir") return {ok:false, msg:`cp: omitting directory '${src}' (simulation supports files only)`};
+  dDirNode.kids[name] = { type:"file", data: s.data, executable: !!s.executable };
+  return {ok:true, msg:""};
+}
+function movePath(src, dst){
+  const c = copyPath(src, dst);
+  if(!c.ok) return c;
+  return removePath(src);
+}
+
+// Walk
+function walk(path, node, cb){
+  cb(path, node);
+  if(node.type==="dir"){
+    for(const k of Object.keys(node.kids)){
+      walk(path + (path.endsWith("/")?"":"/") + k, node.kids[k], cb);
     }
+  }
+}
 
-    let FS = buildFS();
-    let cwd = "/home/imran";
-    let history = [];
-    let histIndex = -1;
+// Commands
+function cmd_ls(pathArg){
+  const target = pathArg ? norm(pathArg) : cwd;
+  const node = getNode(target);
+  if(!node) return {ok:false, msg:`ls: cannot access '${pathArg}': No such file or directory`};
+  if(node.type!=="dir") return {ok:false, msg:`ls: cannot open directory '${pathArg}': Not a directory`};
+  const names = Object.keys(node.kids).sort();
+  return {ok:true, msg: names.join("  ")};
+}
+function cmd_cd(pathArg){
+  const target = norm(pathArg || "~");
+  const node = getNode(target);
+  if(!node) return {ok:false, msg:`cd: ${pathArg}: No such file or directory`};
+  if(node.type!=="dir") return {ok:false, msg:`cd: ${pathArg}: Not a directory`};
+  cwd = target;
+  return {ok:true, msg:""};
+}
+function cmd_cat(pathArg){
+  if(!pathArg) return {ok:false, msg:"cat: missing file operand"};
+  const f = ensureFile(pathArg);
+  if(!f) {
+    const node = getNode(pathArg);
+    if(node && node.type==="dir") return {ok:false, msg:`cat: ${pathArg}: Is a directory`};
+    return {ok:false, msg:`cat: ${pathArg}: No such file or directory`};
+  }
+  return {ok:true, msg: f.data};
+}
+function cmd_head(pathArg, n=10){
+  const f = ensureFile(pathArg);
+  if(!f) return {ok:false, msg:`head: cannot open '${pathArg}'`};
+  return {ok:true, msg: f.data.split("\n").slice(0,n).join("\n")};
+}
+function cmd_tail(pathArg, n=10){
+  const f = ensureFile(pathArg);
+  if(!f) return {ok:false, msg:`tail: cannot open '${pathArg}'`};
+  const lines = f.data.split("\n");
+  return {ok:true, msg: lines.slice(Math.max(0, lines.length-n)).join("\n")};
+}
+function cmd_wc(pathArg){
+  const f = ensureFile(pathArg);
+  if(!f) return {ok:false, msg:`wc: ${pathArg}: No such file or directory`};
+  const lines = f.data.length ? f.data.split("\n").length : 0;
+  const words = f.data.trim().length ? f.data.trim().split(/\s+/).length : 0;
+  const bytes = new TextEncoder().encode(f.data).length;
+  return {ok:true, msg:`${lines} ${words} ${bytes} ${pathArg}`};
+}
+function cmd_grep(pattern, fileArg, inputText=null){
+  if(!pattern) return {ok:false, msg:"grep: missing pattern"};
+  let text = "";
+  if(inputText !== null){
+    text = inputText;
+  } else {
+    if(!fileArg) return {ok:false, msg:"grep: usage: grep <pattern> <file>"};
+    const f = ensureFile(fileArg);
+    if(!f) return {ok:false, msg:`grep: ${fileArg}: No such file or directory`};
+    text = f.data;
+  }
+  const re = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+  const lines = text.split("\n").filter(l=>re.test(l));
+  return {ok:true, msg: lines.join("\n")};
+}
+function cmd_find(base, flag, name){
+  if(!base || flag !== "-name" || !name) return {ok:false, msg:"find: usage: find <path> -name <filename>"};
+  const startPath = norm(base);
+  const startNode = getNode(startPath);
+  if(!startNode) return {ok:false, msg:`find: '${base}': No such file or directory`};
+  const matches = [];
+  walk(startPath, startNode, (p,n)=>{
+    const leaf = p.split("/").pop();
+    if(leaf === name) matches.push(p.replace("/home/imran","~"));
+  });
+  return {ok:true, msg: matches.join("\n")};
+}
+function cmd_touch(fileArg){
+  if(!fileArg) return {ok:false, msg:"touch: missing file operand"};
+  const full = norm(fileArg);
+  const dir = parentPath(full);
+  const dirNode = ensureDir(dir);
+  if(!dirNode) return {ok:false, msg:`touch: cannot touch '${fileArg}': No such directory`};
+  const name = baseName(full);
+  if(!dirNode.kids[name]) dirNode.kids[name] = {type:"file", data:"", executable:false};
+  return {ok:true, msg:""};
+}
+function cmd_mkdir(dirArg){
+  if(!dirArg) return {ok:false, msg:"mkdir: missing operand"};
+  const full = norm(dirArg);
+  const dir = parentPath(full);
+  const dirNode = ensureDir(dir);
+  if(!dirNode) return {ok:false, msg:`mkdir: cannot create directory '${dirArg}': No such directory`};
+  const name = baseName(full);
+  if(dirNode.kids[name]) return {ok:false, msg:`mkdir: cannot create directory '${dirArg}': File exists`};
+  dirNode.kids[name] = {type:"dir", kids:{}};
+  return {ok:true, msg:""};
+}
+function cmd_chmod(mode, fileArg){
+  if(mode !== "+x" || !fileArg) return {ok:false, msg:"chmod: usage: chmod +x <file>"};
+  const f = ensureFile(fileArg);
+  if(!f) return {ok:false, msg:`chmod: cannot access '${fileArg}': No such file`};
+  f.executable = true;
+  return {ok:true, msg:""};
+}
 
-    // Labs (each lab defines a goal checker)
-    const LABS = [
-      {
-        id:"lab1",
-        title:"Lab 1 — Navigation & ls",
-        level:"Beginner",
-        desc:"cd into ~/projects and list files.",
-        hint:"Try: cd projects  then: ls",
-        validate: (state)=> state.cwd === "/home/imran/projects" && state.did.lsInProjects
-      },
-      {
-        id:"lab2",
-        title:"Lab 2 — grep logs",
-        level:"Beginner",
-        desc:"Find ERROR lines in server.log (in ~/labs/lab2).",
-        hint:"Try: cd labs/lab2  then: grep ERROR server.log",
-        validate: (state)=> state.did.grepErrorServerLog
-      },
-      {
-        id:"lab3",
-        title:"Lab 3 — find a file",
-        level:"Intermediate",
-        desc:"Find secret.txt anywhere under ~/labs/lab3.",
-        hint:"Try: cd labs/lab3  then: find . -name secret.txt",
-        validate: (state)=> state.did.findSecret
-      },
-      {
-        id:"lab4",
-        title:"Lab 4 — view system log",
-        level:"Intermediate",
-        desc:"Simulate checking auth logs to spot SSH failures.",
-        hint:"Try: cd /var/log  then: cat auth.log  or: grep Failed auth.log",
-        validate: (state)=> state.did.viewAuthFailures
-      },
-      {
-        id:"lab5",
-        title:"Lab 5 — permissions (chmod)",
-        level:"Intermediate",
-        desc:"Make scripts/clean.sh executable.",
-        hint:"Try: cd ~/labs/lab5/scripts  then: chmod +x clean.sh",
-        validate: (state)=> state.did.chmodX
-      },
-      {
-        id:"lab6",
-        title:"Lab 6 — basic processes",
-        level:"Beginner",
-        desc:"Check running processes and identify docker.",
-        hint:"Try: ps  or: cat ~/labs/lab6/processes.txt and search for docker",
-        validate: (state)=> state.did.findDockerProcess
-      },
-    ];
+// Help / meta
+function showHelp(){
+  printLine("Supported commands (simulation):", "muted");
+  printLine("  help, labs, status, hint, solution, clear, history", "muted");
+  printLine("  pwd, ls [path], cd <path>, cat <file>, head <file>, tail <file>, wc <file>", "muted");
+  printLine("  grep <pattern> <file>, find <path> -name <file>", "muted");
+  printLine("  echo <text>, touch <file>, mkdir <dir>, rm <path>, cp <src> <dst>, mv <src> <dst>", "muted");
+  printLine("  chmod +x <file>, ps, top, journalctl, df -h, free -m, uname -a, whoami", "muted");
+  printLine("Pipes and redirection:", "muted");
+  printLine("  cat file | grep ERROR", "muted");
+  printLine("  echo hello > file.txt   (overwrite)", "muted");
+  printLine("  echo hi >> file.txt     (append)", "muted");
+}
+function showStatus(){
+  const lab = getCurrentLab();
+  printLine(`Active lab: ${lab ? lab.title : "-"}`, "muted");
+  printLine(`Goal: ${lab ? lab.goal : "-"}`, "muted");
+  printLine(`Completed: ${state.done.size}/${LABS.length} • XP: ${state.xp} • Badges: ${state.badges.length}`, "muted");
+}
+function showLabs(){
+  printLine("Labs:", "muted");
+  LABS.forEach(l=>{
+    const done = state.done.has(l.id) ? "✅" : "•";
+    printLine(`  ${done} [${l.tag}] ${l.title}`, "muted");
+  });
+}
 
-    let currentLab = LABS[0].id;
-    const state = {
-      did:{
-        lsInProjects:false,
-        grepErrorServerLog:false,
-        findSecret:false,
-        viewAuthFailures:false,
-        chmodX:false,
-        findDockerProcess:false,
-      },
-      done: new Set()
+// Learning mode (XP / badges)
+const defaultState = {
+  done: [],
+  xp: 0,
+  badges: [],
+  lastLab: null
+};
+let saved = loadStore();
+let state = {
+  done: new Set(saved.done || []),
+  xp: Number(saved.xp || 0),
+  badges: Array.isArray(saved.badges) ? saved.badges : [],
+  lastLab: saved.lastLab || null
+};
+
+// Badges unlock rules
+function recomputeBadges(){
+  const b = new Set(state.badges);
+  const doneCount = state.done.size;
+
+  const hasTag = (tag)=> {
+    const labs = LABS.filter(l=>l.tag===tag).map(l=>l.id);
+    return labs.length && labs.every(id=>state.done.has(id));
+  };
+
+  if(doneCount >= 1) b.add("First Blood");
+  if(doneCount >= 5) b.add("Command Runner");
+  if(doneCount >= 10) b.add("Ops Warrior");
+  if(doneCount >= 15) b.add("Linux Hero");
+
+  if(hasTag("Navigation")) b.add("Navigator");
+  if(hasTag("Text")) b.add("Text Ninja");
+  if(hasTag("Permissions")) b.add("Permission Master");
+  if(hasTag("Processes")) b.add("Process Hunter");
+  if(hasTag("Pipes")) b.add("Pipeline Pro");
+
+  state.badges = [...b].sort();
+}
+
+// Level by XP
+function levelName(xp){
+  if(xp < 50) return "Newbie";
+  if(xp < 140) return "Apprentice";
+  if(xp < 260) return "Operator";
+  if(xp < 400) return "Engineer";
+  return "Master";
+}
+
+// Labs
+const LABS = [
+  // NAVIGATION
+  { id:"l1", tag:"Navigation", diff:"Beginner", xp:10,
+    title:"Lab 1 — Navigation Basics",
+    goal:"Go to ~/projects and list files.",
+    why:"Every Linux task starts with moving around confidently.",
+    hint:"Try: cd projects  then: ls",
+    solution:"cd ~/projects\nls",
+    validate: ()=> cwd === "/home/imran/projects" && did.lsInProjects
+  },
+  { id:"l2", tag:"Navigation", diff:"Beginner", xp:10,
+    title:"Lab 2 — Absolute vs Relative Paths",
+    goal:"From anywhere, open /etc/hosts using cat.",
+    why:"Absolute paths are reliable during incidents.",
+    hint:"Try: cat /etc/hosts",
+    solution:"cat /etc/hosts",
+    validate: ()=> did.catHosts
+  },
+
+  // TEXT
+  { id:"l3", tag:"Text", diff:"Beginner", xp:12,
+    title:"Lab 3 — grep Errors",
+    goal:"Find ERROR lines in ~/labs/text/server.log",
+    why:"Fast triage means searching logs effectively.",
+    hint:"Try: grep ERROR ~/labs/text/server.log",
+    solution:"grep ERROR ~/labs/text/server.log",
+    validate: ()=> did.grepError
+  },
+  { id:"l4", tag:"Text", diff:"Intermediate", xp:14,
+    title:"Lab 4 — head/tail",
+    goal:"Show last 3 lines of ~/projects/app.log",
+    why:"Tail is the fastest way to see latest application problems.",
+    hint:"Try: tail app.log  (but you need -n 3 in real Linux; here use: tail app.log 3)",
+    solution:"cd ~/projects\ntail app.log 3",
+    validate: ()=> did.tail3
+  },
+  { id:"l5", tag:"Text", diff:"Intermediate", xp:14,
+    title:"Lab 5 — wc",
+    goal:"Count lines/words/bytes in ~/labs/text/words.txt",
+    why:"Useful for quick checks on data size and scripts.",
+    hint:"Try: wc ~/labs/text/words.txt",
+    solution:"wc ~/labs/text/words.txt",
+    validate: ()=> did.wcWords
+  },
+
+  // FIND
+  { id:"l6", tag:"Find", diff:"Intermediate", xp:16,
+    title:"Lab 6 — find secret file",
+    goal:"Find secret.txt under ~/labs/fs",
+    why:"Finding mislocated files is common in real troubleshooting.",
+    hint:"Try: find ~/labs/fs -name secret.txt",
+    solution:"find ~/labs/fs -name secret.txt",
+    validate: ()=> did.findSecret
+  },
+
+  // PERMISSIONS
+  { id:"l7", tag:"Permissions", diff:"Intermediate", xp:16,
+    title:"Lab 7 — chmod +x",
+    goal:"Make ~/labs/permissions/scripts/clean.sh executable",
+    why:"You’ll often fix scripts that fail because they aren't executable.",
+    hint:"Try: chmod +x ~/labs/permissions/scripts/clean.sh",
+    solution:"chmod +x ~/labs/permissions/scripts/clean.sh",
+    validate: ()=> did.chmodClean
+  },
+
+  // FILE OPS
+  { id:"l8", tag:"Files", diff:"Intermediate", xp:16,
+    title:"Lab 8 — touch + mkdir",
+    goal:"Create folder ~/labs/fs/tmp/demo and file hello.txt inside it",
+    why:"Creating structured directories and files is daily work.",
+    hint:"Try: mkdir ~/labs/fs/tmp/demo then: touch ~/labs/fs/tmp/demo/hello.txt",
+    solution:"mkdir ~/labs/fs/tmp/demo\ntouch ~/labs/fs/tmp/demo/hello.txt",
+    validate: ()=> did.mkDemo && did.touchHello
+  },
+  { id:"l9", tag:"Files", diff:"Intermediate", xp:16,
+    title:"Lab 9 — cp and mv",
+    goal:"Copy ~/projects/notes.md to ~/labs/fs/tmp/notes-copy.md then move it to notes-moved.md",
+    why:"Copying/moving files safely is essential in production changes.",
+    hint:"Try: cp <src> <dst> then mv <old> <new>",
+    solution:"cp ~/projects/notes.md ~/labs/fs/tmp/notes-copy.md\nmv ~/labs/fs/tmp/notes-copy.md ~/labs/fs/tmp/notes-moved.md",
+    validate: ()=> did.cpNotes && did.mvNotes
+  },
+
+  // PROCESSES
+  { id:"l10", tag:"Processes", diff:"Beginner", xp:12,
+    title:"Lab 10 — ps (find docker)",
+    goal:"Run ps and confirm docker exists",
+    why:"Process checks are core to incident response.",
+    hint:"Try: ps",
+    solution:"ps",
+    validate: ()=> did.psDocker
+  },
+  { id:"l11", tag:"Processes", diff:"Beginner", xp:12,
+    title:"Lab 11 — top (spot docker)",
+    goal:"Run top and spot docker line",
+    why:"top helps you quickly see heavy processes.",
+    hint:"Try: top",
+    solution:"top",
+    validate: ()=> did.topDocker
+  },
+
+  // LOGS
+  { id:"l12", tag:"Logs", diff:"Intermediate", xp:16,
+    title:"Lab 12 — journalctl SSH failures",
+    goal:"Use journalctl and find Failed password lines",
+    why:"Logs tell the truth during security events.",
+    hint:"Try: journalctl then look for Failed",
+    solution:"journalctl",
+    validate: ()=> did.journalFailed
+  },
+  { id:"l13", tag:"Logs", diff:"Intermediate", xp:16,
+    title:"Lab 13 — grep auth.log",
+    goal:"grep Failed in /var/log/auth.log",
+    why:"Classic way to confirm brute-force attempts.",
+    hint:"Try: grep Failed /var/log/auth.log",
+    solution:"grep Failed /var/log/auth.log",
+    validate: ()=> did.grepAuthFailed
+  },
+
+  // PIPES + REDIRECTION
+  { id:"l14", tag:"Pipes", diff:"Advanced", xp:22,
+    title:"Lab 14 — Pipes (cat | grep)",
+    goal:"Use a pipe to filter ERROR from app.log (cat app.log | grep ERROR)",
+    why:"Pipes are one of the most powerful Linux superpowers.",
+    hint:"Go to ~/projects then run: cat app.log | grep ERROR",
+    solution:"cd ~/projects\ncat app.log | grep ERROR",
+    validate: ()=> did.pipeError
+  },
+  { id:"l15", tag:"Pipes", diff:"Advanced", xp:24,
+    title:"Lab 15 — Redirection (>, >>)",
+    goal:"Write 'note1' into ~/labs/redirection/notes.txt (overwrite), then append 'note2'",
+    why:"Redirecting output is common in scripting and quick notes during ops.",
+    hint:"Try: echo note1 > ~/labs/redirection/notes.txt  then: echo note2 >> ~/labs/redirection/notes.txt",
+    solution:"echo note1 > ~/labs/redirection/notes.txt\necho note2 >> ~/labs/redirection/notes.txt\ncat ~/labs/redirection/notes.txt",
+    validate: ()=> did.redirNote1 && did.redirNote2
+  },
+];
+
+let currentLabId = state.lastLab || LABS[0].id;
+
+// Per-session flags (lab validation uses these)
+let did = {
+  lsInProjects:false,
+  catHosts:false,
+  grepError:false,
+  tail3:false,
+  wcWords:false,
+  findSecret:false,
+  chmodClean:false,
+  mkDemo:false,
+  touchHello:false,
+  cpNotes:false,
+  mvNotes:false,
+  psDocker:false,
+  topDocker:false,
+  journalFailed:false,
+  grepAuthFailed:false,
+  pipeError:false,
+  redirNote1:false,
+  redirNote2:false,
+};
+
+// Filters UI
+const TAGS = ["All","Navigation","Text","Find","Permissions","Files","Processes","Logs","Pipes"];
+let activeTag = "All";
+
+// Render filters
+function renderFilters(){
+  filters.innerHTML = "";
+  TAGS.forEach(t=>{
+    const el = document.createElement("div");
+    el.className = "chip" + (t===activeTag ? " active":"");
+    el.textContent = t;
+    el.onclick = ()=>{
+      activeTag = t;
+      renderFilters();
+      renderLabList();
     };
+    filters.appendChild(el);
+  });
+}
 
-    function norm(path){
-      // resolve ~, ., .. with cwd
-      if(!path || path.trim()==="") return cwd;
-      path = path.trim();
-      if(path === "~") path = "/home/imran";
-      if(path.startsWith("~/")) path = "/home/imran/" + path.slice(2);
-      if(!path.startsWith("/")){
-        path = (cwd.endsWith("/") ? cwd : cwd + "/") + path;
-      }
-      // normalize segments
-      const parts = [];
-      for(const seg of path.split("/")){
-        if(!seg || seg === ".") continue;
-        if(seg === ".."){ parts.pop(); continue; }
-        parts.push(seg);
-      }
-      return "/" + parts.join("/");
+// Lab retrieval
+function getCurrentLab(){
+  return LABS.find(l=>l.id===currentLabId) || null;
+}
+
+// UI render
+function renderLabList(){
+  const q = (search.value || "").trim().toLowerCase();
+  labList.innerHTML = "";
+
+  const filtered = LABS.filter(l=>{
+    const tagOk = activeTag==="All" ? true : l.tag===activeTag;
+    const qOk = !q ? true : (
+      l.title.toLowerCase().includes(q) ||
+      l.goal.toLowerCase().includes(q) ||
+      l.tag.toLowerCase().includes(q) ||
+      (l.diff||"").toLowerCase().includes(q)
+    );
+    return tagOk && qOk;
+  });
+
+  filtered.forEach(l=>{
+    const el = document.createElement("div");
+    el.className = "lab" + (l.id===currentLabId ? " active":"");
+    const done = state.done.has(l.id);
+    el.innerHTML = `
+      <b>${done ? "✅ " : ""}${l.title}</b>
+      <small>${l.goal}</small>
+      <div class="miniRow">
+        <span class="pill">${l.tag}</span>
+        <span class="pill">${l.diff}</span>
+        <span class="pill good">+${l.xp} XP</span>
+      </div>
+    `;
+    el.onclick = ()=> selectLab(l.id, true);
+    labList.appendChild(el);
+  });
+
+  if(!filtered.length){
+    const empty = document.createElement("div");
+    empty.className = "lab";
+    empty.innerHTML = `<b>No labs found</b><small>Try a different keyword.</small>`;
+    labList.appendChild(empty);
+  }
+}
+
+function updateStatsUI(){
+  const doneCount = state.done.size;
+  const total = LABS.length;
+
+  donePill.textContent = `${doneCount}/${total} Done`;
+  xpPill.textContent = `XP: ${state.xp}`;
+  badgePill.textContent = `Badges: ${state.badges.length}`;
+  levelPill.textContent = `Level: ${levelName(state.xp)}`;
+
+  const pct = Math.round((doneCount/total)*100);
+  barFill.style.width = pct + "%";
+
+  saveStore({
+    done: [...state.done],
+    xp: state.xp,
+    badges: state.badges,
+    lastLab: currentLabId
+  });
+}
+
+function updateLabDetails(){
+  const l = getCurrentLab();
+  if(!l) return;
+
+  labTitle.textContent = l.title;
+  labGoal.textContent = "Goal: " + l.goal;
+  labWhy.textContent = "Why it matters: " + l.why;
+
+  labDiffPill.textContent = "Difficulty: " + l.diff;
+  labXpPill.textContent = "XP: +" + l.xp;
+
+  const done = state.done.has(l.id);
+  labStatusPill.textContent = done ? "Completed ✅" : "Not completed";
+  labStatusPill.className = "pill " + (done ? "good" : "warn");
+
+  hintBox.textContent = l.hint;
+  solutionBox.textContent = l.solution;
+
+  showHint.checked = false;
+  showSolution.checked = false;
+  hintBox.classList.remove("show");
+  solutionBox.classList.remove("show");
+
+  activeLabPill.textContent = "Lab: " + l.id.toUpperCase();
+  termStatusPill.textContent = done ? "Completed ✅" : "In progress";
+  termStatusPill.className = "pill " + (done ? "good" : "warn");
+}
+
+function selectLab(id, announce=false){
+  currentLabId = id;
+  renderFilters();
+  renderLabList();
+  updateLabDetails();
+  setPathLabel();
+  updateStatsUI();
+
+  if(announce){
+    printLine("", "muted");
+    printLine("Switched lab → " + getCurrentLab().title, "ok");
+    printLine("Goal: " + getCurrentLab().goal, "muted");
+  }
+}
+
+// Hint/Solution toggles
+showHint.addEventListener("change", ()=>{
+  hintBox.classList.toggle("show", showHint.checked);
+});
+showSolution.addEventListener("change", ()=>{
+  solutionBox.classList.toggle("show", showSolution.checked);
+});
+
+// Buttons
+startLabBtn.addEventListener("click", ()=>{
+  const l = getCurrentLab();
+  printLine("", "muted");
+  printLine("Starting: " + l.title, "ok");
+  printLine("Goal: " + l.goal, "muted");
+  printLine("Type 'hint' or 'solution' anytime.", "muted");
+  input.focus();
+});
+copyGoalBtn.addEventListener("click", async ()=>{
+  const l = getCurrentLab();
+  // heuristic: copy solution (usually goal commands)
+  try{
+    await navigator.clipboard.writeText(l.solution);
+    printLine("📋 Copied goal commands (solution) to clipboard.", "ok");
+  } catch {
+    printLine("Clipboard blocked by browser. Copy manually from Solution box.", "warnText");
+  }
+});
+
+// Reset lab (does not wipe global progress unless completed and you want to redo)
+function resetCurrentLab(){
+  // reset FS and did flags; keep global progress but allow re-practice
+  FS = buildFS();
+  cwd = "/home/imran";
+  did = Object.fromEntries(Object.keys(did).map(k=>[k,false]));
+  out.innerHTML = "";
+  boot(true);
+}
+resetLabBtn.addEventListener("click", resetCurrentLab);
+
+wipeProgressBtn.addEventListener("click", ()=>{
+  if(!confirm("This will wipe XP, badges, and completed labs. Continue?")) return;
+  localStorage.removeItem(STORE_KEY);
+  state = { done:new Set(), xp:0, badges:[], lastLab:null };
+  currentLabId = LABS[0].id;
+  FS = buildFS();
+  cwd = "/home/imran";
+  did = Object.fromEntries(Object.keys(did).map(k=>[k,false]));
+  out.innerHTML = "";
+  boot(true);
+});
+
+// Command pipeline parser: supports single pipe chain and redirection on final output
+function parseRedirection(cmd){
+  // returns {cmd, redir: {type: ">" | ">>", file} | null}
+  const m = cmd.match(/^(.*?)(\s+>>\s+|\s+>\s+)(.+)$/);
+  if(!m) return { cmd: cmd.trim(), redir: null };
+  const left = m[1].trim();
+  const op = m[2].includes(">>") ? ">>" : ">";
+  const file = m[3].trim();
+  return { cmd: left, redir: { type: op, file } };
+}
+
+function runOne(command, pipedInput=null){
+  const parts = command.trim().split(" ").filter(Boolean);
+  const base = parts[0] || "";
+
+  // meta commands
+  if(base==="") return {ok:true, out:""};
+  if(base==="clear"){ out.innerHTML=""; return {ok:true, out:""}; }
+  if(base==="help"){ showHelp(); return {ok:true, out:""}; }
+  if(base==="labs"){ showLabs(); return {ok:true, out:""}; }
+  if(base==="status"){ showStatus(); return {ok:true, out:""}; }
+  if(base==="hint"){ printLine("Hint: " + getCurrentLab().hint, "warnText"); return {ok:true, out:""}; }
+  if(base==="solution"){ printLine("Solution:\n" + getCurrentLab().solution, "warnText"); return {ok:true, out:""}; }
+  if(base==="history"){
+    history.slice(-30).forEach((h,i)=> printLine(`${Math.max(0,history.length-30)+i+1}  ${h}`, "muted"));
+    return {ok:true, out:""};
+  }
+
+  // system info
+  if(base==="pwd") return {ok:true, out: cwd.replace("/home/imran","~")};
+  if(base==="whoami") return {ok:true, out:"imran"};
+  if(base==="uname" && parts[1]==="-a") return {ok:true, out:"Linux labs 6.8.0-sim #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux"};
+  if(base==="df" && parts[1]==="-h"){
+    return {ok:true, out:
+`Filesystem      Size  Used Avail Use% Mounted on
+/dev/simdisk      50G   17G   31G  36% /`};
+  }
+  if(base==="free" && parts[1]==="-m"){
+    return {ok:true, out:
+`              total        used        free      shared  buff/cache   available
+Mem:           8192        1970        4022         210        2200        5900`};
+  }
+  if(base==="ps"){
+    const t =
+` PID TTY      TIME     CMD
+ 101 pts/0    00:00:01 nginx
+ 202 pts/0    00:00:00 sshd
+ 303 pts/0    00:00:02 docker
+ 404 pts/0    00:00:01 python
+ 505 pts/0    00:00:01 node`;
+    did.psDocker = true;
+    return {ok:true, out:t};
+  }
+  if(base==="top"){
+    const t =
+`top - 12:00:00 up 10 days,  2 users,  load average: 0.42, 0.36, 0.31
+%Cpu(s):  7.2 us,  1.1 sy,  0.0 ni, 91.3 id,  0.4 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   8192.0 total,   4022.0 free,   1970.0 used,   2200.0 buff/cache
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+  303 root      20   0  123456  22120   9892 S   3.2   0.3   0:11.2 docker`;
+    did.topDocker = true;
+    return {ok:true, out:t};
+  }
+  if(base==="journalctl"){
+    const t =
+`-- Logs begin at Mon 2025-01-01 00:00:00 IST, end at Tue 2025-01-02 12:00:00 IST. --
+Jan 02 10:20:01 web01 sshd[123]: Failed password for invalid user test
+Jan 02 10:20:05 web01 sshd[123]: Failed password for invalid user root
+Jan 02 10:21:15 web01 sshd[123]: Accepted password for imran`;
+    did.journalFailed = true;
+    return {ok:true, out:t};
+  }
+
+  // file commands
+  if(base==="ls"){
+    const res = cmd_ls(parts[1]);
+    return res.ok ? {ok:true, out:res.msg} : {ok:false, out:res.msg};
+  }
+  if(base==="cd"){
+    const res = cmd_cd(parts[1] || "~");
+    setPathLabel();
+    return res.ok ? {ok:true, out:""} : {ok:false, out:res.msg};
+  }
+  if(base==="cat"){
+    // if pipedInput is present and user uses "cat" without file, show piped input
+    if(!parts[1] && pipedInput !== null) return {ok:true, out:pipedInput};
+    const res = cmd_cat(parts[1]);
+    // markers
+    if(norm(parts[1]||"") === "/etc/hosts") did.catHosts = true;
+    if(currentLabId==="l1" && cwd==="/home/imran/projects") did.lsInProjects = did.lsInProjects; // no-op
+    return res.ok ? {ok:true, out:res.msg} : {ok:false, out:res.msg};
+  }
+  if(base==="head"){
+    const n = parts[2] ? parseInt(parts[2],10) : 10;
+    const res = cmd_head(parts[1], isFinite(n)?n:10);
+    return res.ok ? {ok:true, out:res.msg} : {ok:false, out:res.msg};
+  }
+  if(base==="tail"){
+    const n = parts[2] ? parseInt(parts[2],10) : 10;
+    const res = cmd_tail(parts[1], isFinite(n)?n:10);
+    // lab4 detection (last 3 lines of app.log)
+    if(currentLabId==="l4" && norm(parts[1]||"")==="/home/imran/projects/app.log" && n===3) did.tail3 = true;
+    return res.ok ? {ok:true, out:res.msg} : {ok:false, out:res.msg};
+  }
+  if(base==="wc"){
+    const res = cmd_wc(parts[1]);
+    if(currentLabId==="l5" && norm(parts[1]||"")==="/home/imran/labs/text/words.txt") did.wcWords = true;
+    return res.ok ? {ok:true, out:res.msg} : {ok:false, out:res.msg};
+  }
+  if(base==="grep"){
+    // grep pattern [file]
+    const pattern = parts[1];
+    const file = parts[2];
+    const res = cmd_grep(pattern, file, pipedInput);
+    // lab markers
+    if(currentLabId==="l3" && /ERROR/i.test(pattern||"") && norm(file||"")==="/home/imran/labs/text/server.log") did.grepError = true;
+    if(currentLabId==="l13" && /Failed/i.test(pattern||"") && norm(file||"")==="/var/log/auth.log") did.grepAuthFailed = true;
+    return res.ok ? {ok:true, out:res.msg} : {ok:false, out:res.msg};
+  }
+  if(base==="find"){
+    const res = cmd_find(parts[1], parts[2], parts[3]);
+    if(currentLabId==="l6" && parts[2]==="-name" && parts[3]==="secret.txt") did.findSecret = true;
+    return res.ok ? {ok:true, out:res.msg} : {ok:false, out:res.msg};
+  }
+  if(base==="chmod"){
+    const res = cmd_chmod(parts[1], parts[2]);
+    if(currentLabId==="l7" && parts[1]==="+x" && norm(parts[2]||"")==="/home/imran/labs/permissions/scripts/clean.sh") did.chmodClean = true;
+    return res.ok ? {ok:true, out:""} : {ok:false, out:res.msg};
+  }
+  if(base==="touch"){
+    const res = cmd_touch(parts[1]);
+    if(currentLabId==="l8" && norm(parts[1]||"")==="/home/imran/labs/fs/tmp/demo/hello.txt") did.touchHello = true;
+    return res.ok ? {ok:true, out:""} : {ok:false, out:res.msg};
+  }
+  if(base==="mkdir"){
+    const res = cmd_mkdir(parts[1]);
+    if(currentLabId==="l8" && norm(parts[1]||"")==="/home/imran/labs/fs/tmp/demo") did.mkDemo = true;
+    return res.ok ? {ok:true, out:""} : {ok:false, out:res.msg};
+  }
+  if(base==="rm"){
+    const res = removePath(parts[1]);
+    return res.ok ? {ok:true, out:""} : {ok:false, out:res.msg};
+  }
+  if(base==="cp"){
+    const res = copyPath(parts[1], parts[2]);
+    if(currentLabId==="l9" && norm(parts[1]||"")==="/home/imran/projects/notes.md" && norm(parts[2]||"")==="/home/imran/labs/fs/tmp/notes-copy.md") did.cpNotes = true;
+    return res.ok ? {ok:true, out:""} : {ok:false, out:res.msg};
+  }
+  if(base==="mv"){
+    const res = movePath(parts[1], parts[2]);
+    if(currentLabId==="l9" && norm(parts[2]||"")==="/home/imran/labs/fs/tmp/notes-moved.md") did.mvNotes = true;
+    return res.ok ? {ok:true, out:""} : {ok:false, out:res.msg};
+  }
+  if(base==="echo"){
+    // echo text (supports pipedInput but we ignore pipedInput here)
+    const text = parts.slice(1).join(" ");
+    return {ok:true, out:text};
+  }
+
+  return {ok:false, out:`${base}: command not found (try 'help')`};
+}
+
+function checkCompletion(){
+  const lab = getCurrentLab();
+  if(!lab) return;
+
+  // special detection for l1 (ls in projects)
+  if(currentLabId==="l1" && cwd==="/home/imran/projects" && lastCmdWasLSInProjects) did.lsInProjects = true;
+
+  // pipe lab marker (l14): user must run "cat app.log | grep ERROR"
+  // We'll detect by seeing lastPipeRan flag
+  if(currentLabId==="l14" && lastPipeRan) did.pipeError = true;
+
+  // redirection lab (l15): detect writes
+  // handled in redirection logic
+
+  const already = state.done.has(lab.id);
+  if(!already && lab.validate()){
+    state.done.add(lab.id);
+    state.xp += lab.xp;
+
+    recomputeBadges();
+    updateStatsUI();
+    renderLabList();
+    updateLabDetails();
+
+    printLine("", "muted");
+    printLine("✅ Lab completed! +" + lab.xp + " XP", "ok");
+    if(state.badges.length){
+      // show newly unlocked badges (simple: just print all)
+      printLine("🏅 Badges: " + state.badges.join(", "), "muted");
     }
+    printLine("Choose next lab from the left panel.", "muted");
+  } else {
+    updateStatsUI();
+    updateLabDetails();
+  }
+}
 
-    function getNode(path){
-      path = norm(path);
-      const parts = path.split("/").filter(Boolean);
-      let node = FS["/"];
-      if(parts.length===0) return node;
-      for(const p of parts){
-        if(!node || node.type!=="dir") return null;
-        node = node.kids[p];
-      }
-      return node || null;
-    }
+// Track last actions for some labs
+let lastCmdWasLSInProjects = false;
+let lastPipeRan = false;
 
-    function listDir(path){
-      const node = getNode(path);
-      if(!node) return { ok:false, msg:`ls: cannot access '${path}': No such file or directory` };
-      if(node.type!=="dir") return { ok:false, msg:`ls: cannot open directory '${path}': Not a directory` };
-      const names = Object.keys(node.kids);
-      return { ok:true, data: names.sort().join("  ") };
-    }
+function runCommand(raw){
+  const inputRaw = raw.trim();
+  if(!inputRaw) return;
 
-    function printLine(text, cls="line"){
-      const div = document.createElement("div");
-      div.className = "line " + cls;
-      div.textContent = text;
-      out.appendChild(div);
-      out.scrollTop = out.scrollHeight;
-    }
+  promptLine(inputRaw);
 
-    function promptLine(cmd){
-      printLine(`imran@labs:${cwd.replace("/home/imran","~")}$ ${cmd}`, "cmd");
-    }
+  // save history
+  history.push(inputRaw);
+  histIndex = history.length;
 
-    function setLabUI(){
-      const lab = LABS.find(l=>l.id===currentLab);
-      document.querySelectorAll(".lab").forEach(el=>{
-        el.classList.toggle("active", el.dataset.id === currentLab);
-      });
-      labLevelPill.textContent = "Level: " + lab.level;
-      labStatusPill.textContent = state.done.has(currentLab) ? "Completed ✅" : "Not completed";
-      labStatusPill.className = "pill " + (state.done.has(currentLab) ? "good" : "warn");
-      pathLabel.textContent = `imran@labs:${cwd.replace("/home/imran","~")}$`;
-      progressPill.textContent = `${state.done.size}/${LABS.length} Done`;
-    }
+  // reset per-command flags
+  lastCmdWasLSInProjects = false;
+  lastPipeRan = false;
 
-    function labsSidebar(){
-      labList.innerHTML = "";
-      LABS.forEach(lab=>{
-        const el = document.createElement("div");
-        el.className = "lab";
-        el.dataset.id = lab.id;
-        el.innerHTML = `<b>${lab.title}</b><small>${lab.desc}</small>`;
-        el.addEventListener("click", ()=>{
-          currentLab = lab.id;
-          printLine("", "muted");
-          printLine(`Switched to: ${lab.title}`, "ok");
-          printLine(`Goal: ${lab.desc}`, "muted");
-          setLabUI();
-        });
-        labList.appendChild(el);
-      });
-    }
+  // 1) Handle pipes: "a | b | c"
+  const pipeParts = inputRaw.split("|").map(s=>s.trim()).filter(Boolean);
 
-    function checkLabCompletion(){
-      const lab = LABS.find(l=>l.id===currentLab);
-      if(!state.done.has(currentLab) && lab.validate({cwd, did: state.did})){
-        state.done.add(currentLab);
-        printLine("✅ Lab completed! Nice work.", "ok");
-        printLine("Try another lab from the left panel.", "muted");
-        setLabUI();
-      } else {
-        setLabUI();
-      }
-    }
+  // 2) Redirection only applies to final command output (>, >>)
+  const last = pipeParts[pipeParts.length-1] || "";
+  const { cmd: lastCmd, redir } = parseRedirection(last);
+  pipeParts[pipeParts.length-1] = lastCmd;
 
-    function showHelp(){
-      printLine("Supported commands (simulated):", "muted");
-      printLine("  help, labs, clear, pwd, ls [path], cd <path>, cat <file>, echo <text>", "muted");
-      printLine("  grep <pattern> <file>, find <path> -name <file>", "muted");
-      printLine("  ps, top, journalctl, whoami, uname -a, df -h, free -m, chmod +x <file>", "muted");
-      printLine("Notes:", "muted");
-      printLine("  - This is a safe simulation (no real server).", "muted");
-      printLine("  - Use 'hint' for the current lab.", "muted");
-    }
+  let piped = null;
+  let okAll = true;
 
-    function showLabs(){
-      printLine("Available labs:", "muted");
-      LABS.forEach(l=>{
-        const done = state.done.has(l.id) ? "✅" : "•";
-        printLine(`  ${done} ${l.title}`, "muted");
-      });
-    }
+  for(let i=0;i<pipeParts.length;i++){
+    const cmd = pipeParts[i];
 
-    function hint(){
-      const lab = LABS.find(l=>l.id===currentLab);
-      printLine("Hint: " + lab.hint, "warn");
-    }
+    // run command with piped input
+    const res = runOne(cmd, piped);
 
-    function cmd_cd(arg){
-      const target = norm(arg || "~");
-      const node = getNode(target);
-      if(!node) return {ok:false, msg:`cd: ${arg}: No such file or directory`};
-      if(node.type!=="dir") return {ok:false, msg:`cd: ${arg}: Not a directory`};
-      cwd = target;
-      return {ok:true, msg:""};
-    }
+    if(!res.ok){
+      okAll = false;
+      printLine(res.out, "err");
+      piped = null;
+      break;
+    } else {
+      // commands that print output
+      piped = res.out;
 
-    function cmd_cat(arg){
-      if(!arg) return {ok:false, msg:"cat: missing file operand"};
-      const node = getNode(arg);
-      if(!node) return {ok:false, msg:`cat: ${arg}: No such file or directory`};
-      if(node.type!=="file") return {ok:false, msg:`cat: ${arg}: Is a directory`};
-      return {ok:true, msg: node.data};
-    }
+      // print output ONLY if last in pipeline OR command is meta that printed itself
+      if(i === pipeParts.length-1){
+        if(piped && piped.trim().length) {
+          // apply redirection if present
+          if(redir){
+            const content = piped + (piped.endsWith("\n") ? "" : "\n");
+            const w = writeFile(redir.file, redir.type===">>" ? (ensureFile(redir.file)?.data || "") + content : content, false);
 
-    function cmd_grep(pattern, file){
-      if(!pattern || !file) return {ok:false, msg:"grep: usage: grep <pattern> <file>"};
-      const node = getNode(file);
-      if(!node) return {ok:false, msg:`grep: ${file}: No such file or directory`};
-      if(node.type!=="file") return {ok:false, msg:`grep: ${file}: Is a directory`};
-      const re = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-      const lines = node.data.split("\n");
-      const outLines = lines.filter(l=>re.test(l));
-      return {ok:true, msg: outLines.length ? outLines.join("\n") : ""};
-    }
+            // Actually implement append vs overwrite properly:
+            if(redir.type===">"){
+              writeFile(redir.file, content, false);
+            } else {
+              // append
+              const existing = ensureFile(redir.file)?.data || "";
+              writeFile(redir.file, existing + content, false);
+            }
 
-    function walk(path, node, cb){
-      cb(path, node);
-      if(node.type==="dir"){
-        for(const k of Object.keys(node.kids)){
-          walk(path + (path.endsWith("/")?"":"/") + k, node.kids[k], cb);
-        }
-      }
-    }
+            // lab15 markers
+            if(currentLabId==="l15"){
+              const f = norm(redir.file);
+              if(f==="/home/imran/labs/redirection/notes.txt"){
+                const now = ensureFile(f)?.data || "";
+                if(now.includes("note1")) did.redirNote1 = true;
+                // if appended exists after note1
+                if(now.includes("note2")) did.redirNote2 = true;
+              }
+            }
 
-    function cmd_find(base, flag, name){
-      if(!base || flag !== "-name" || !name) return {ok:false, msg:"find: usage: find <path> -name <filename>"};
-      const startPath = norm(base);
-      const startNode = getNode(startPath);
-      if(!startNode) return {ok:false, msg:`find: '${base}': No such file or directory`};
-      const matches = [];
-      walk(startPath, startNode, (p,n)=>{
-        const leaf = p.split("/").pop();
-        if(leaf === name) matches.push(p.replace("/home/imran","~"));
-      });
-      return {ok:true, msg: matches.length ? matches.join("\n") : ""};
-    }
-
-    function cmd_chmod(mode, file){
-      if(mode !== "+x" || !file) return {ok:false, msg:"chmod: usage: chmod +x <file>"};
-      const node = getNode(file);
-      if(!node) return {ok:false, msg:`chmod: cannot access '${file}': No such file or directory`};
-      if(node.type!=="file") return {ok:false, msg:`chmod: cannot operate on '${file}': Not a file`};
-      node.executable = true;
-      return {ok:true, msg:""};
-    }
-
-    function runCommand(raw){
-      const cmd = raw.trim();
-      if(!cmd) return;
-
-      promptLine(cmd);
-
-      // basic parsing
-      const parts = cmd.split(" ").filter(Boolean);
-      const base = parts[0];
-
-      // commands
-      if(base === "clear"){
-        out.innerHTML = "";
-        return;
-      }
-
-      if(base === "help"){ showHelp(); return; }
-      if(base === "labs"){ showLabs(); return; }
-      if(base === "hint"){ hint(); return; }
-
-      if(base === "pwd"){
-        printLine(cwd.replace("/home/imran","~"));
-        return;
-      }
-
-      if(base === "whoami"){ printLine("imran"); return; }
-      if(base === "uname" && parts[1] === "-a"){
-        printLine("Linux labs 6.8.0-sim #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux");
-        return;
-      }
-      if(base === "df" && parts[1] === "-h"){
-        printLine("Filesystem      Size  Used Avail Use% Mounted on");
-        printLine("/dev/simdisk      50G   17G   31G  36% /");
-        return;
-      }
-      if(base === "free" && parts[1] === "-m"){
-        printLine("              total        used        free      shared  buff/cache   available");
-        printLine("Mem:           8192        1970        4022         210        2200        5900");
-        return;
-      }
-      if(base === "ps"){
-        // show processes (also used by Lab 6)
-        printLine(" PID TTY      TIME     CMD");
-        printLine(" 101 pts/0    00:00:01 nginx");
-        printLine(" 202 pts/0    00:00:00 sshd");
-        printLine(" 303 pts/0    00:00:02 docker");
-        printLine(" 404 pts/0    00:00:01 python");
-        printLine(" 505 pts/0    00:00:01 node");
-        // mark lab6 if docker appears
-        if(currentLab === "lab6") state.did.findDockerProcess = true;
-        checkLabCompletion();
-        return;
-      }
-      if(base === "top"){
-        printLine("top - 12:00:00 up 10 days,  2 users,  load average: 0.42, 0.36, 0.31");
-        printLine("%Cpu(s):  7.2 us,  1.1 sy,  0.0 ni, 91.3 id,  0.4 wa,  0.0 hi,  0.0 si,  0.0 st");
-        printLine("MiB Mem :   8192.0 total,   4022.0 free,   1970.0 used,   2200.0 buff/cache");
-        printLine("  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND");
-        printLine("  303 root      20   0  123456  22120   9892 S   3.2   0.3   0:11.2 docker");
-        if(currentLab === "lab6") state.did.findDockerProcess = true;
-        checkLabCompletion();
-        return;
-      }
-      if(base === "journalctl"){
-        printLine("-- Logs begin at Mon 2025-01-01 00:00:00 IST, end at Tue 2025-01-02 12:00:00 IST. --");
-        printLine("Jan 02 10:20:01 web01 sshd[123]: Failed password for invalid user test");
-        printLine("Jan 02 10:20:05 web01 sshd[123]: Failed password for invalid user root");
-        printLine("Jan 02 10:21:15 web01 sshd[123]: Accepted password for imran");
-        if(currentLab === "lab4") state.did.viewAuthFailures = true;
-        checkLabCompletion();
-        return;
-      }
-
-      if(base === "ls"){
-        const res = listDir(parts[1] || cwd);
-        if(!res.ok) printLine(res.msg, "err");
-        else {
-          printLine(res.data);
-          if(currentLab === "lab1" && cwd === "/home/imran/projects") state.did.lsInProjects = true;
-          checkLabCompletion();
-        }
-        return;
-      }
-
-      if(base === "cd"){
-        const res = cmd_cd(parts[1] || "~");
-        if(!res.ok) printLine(res.msg, "err");
-        setLabUI();
-        checkLabCompletion();
-        return;
-      }
-
-      if(base === "cat"){
-        const res = cmd_cat(parts[1]);
-        if(!res.ok) printLine(res.msg, "err");
-        else {
-          printLine(res.msg);
-          // lab4: view auth failures
-          if(currentLab === "lab4" && (norm(parts[1]) === "/var/log/auth.log")) state.did.viewAuthFailures = true;
-          // lab6: find docker by reading file
-          if(currentLab === "lab6" && (norm(parts[1]) === "/home/imran/labs/lab6/processes.txt") && res.msg.includes("docker")) {
-            state.did.findDockerProcess = true;
+            printLine(`(redirected output ${redir.type} ${redir.file})`, "muted");
+          } else {
+            printLine(piped);
           }
-          checkLabCompletion();
         }
-        return;
       }
 
-      if(base === "grep"){
-        const res = cmd_grep(parts[1], parts[2]);
-        if(!res.ok) printLine(res.msg, "err");
-        else {
-          if(res.msg) printLine(res.msg);
-          // lab2: grep ERROR server.log
-          const filePath = norm(parts[2] || "");
-          if(currentLab === "lab2" && /ERROR/i.test(parts[1] || "") && filePath === "/home/imran/labs/lab2/server.log"){
-            state.did.grepErrorServerLog = true;
-          }
-          // lab4: grep Failed auth.log
-          if(currentLab === "lab4" && /failed/i.test(parts[1] || "") && filePath === "/var/log/auth.log"){
-            state.did.viewAuthFailures = true;
-          }
-          // lab6: grep docker processes.txt
-          if(currentLab === "lab6" && /docker/i.test(parts[1] || "") && filePath === "/home/imran/labs/lab6/processes.txt"){
-            state.did.findDockerProcess = true;
-          }
-          checkLabCompletion();
+      // lab1 marker: "ls" inside ~/projects
+      if(cmd.startsWith("ls") && cwd==="/home/imran/projects") lastCmdWasLSInProjects = true;
+
+      // lab14 pipe marker
+      if(currentLabId==="l14" && pipeParts.length>=2){
+        const a = pipeParts[0];
+        const b = pipeParts[1];
+        if(a.startsWith("cat") && b.startsWith("grep") && a.includes("app.log") && b.toLowerCase().includes("error")){
+          lastPipeRan = true;
         }
-        return;
       }
-
-      if(base === "find"){
-        const res = cmd_find(parts[1], parts[2], parts[3]);
-        if(!res.ok) printLine(res.msg, "err");
-        else {
-          if(res.msg) printLine(res.msg);
-          // lab3 completion
-          if(currentLab === "lab3" && parts[2] === "-name" && parts[3] === "secret.txt"){
-            state.did.findSecret = true;
-          }
-          checkLabCompletion();
-        }
-        return;
-      }
-
-      if(base === "chmod"){
-        const res = cmd_chmod(parts[1], parts[2]);
-        if(!res.ok) printLine(res.msg, "err");
-        else {
-          // lab5 completion
-          const filePath = norm(parts[2] || "");
-          if(currentLab === "lab5" && parts[1] === "+x" && filePath.endsWith("/home/imran/labs/lab5/scripts/clean.sh")){
-            state.did.chmodX = true;
-          }
-          checkLabCompletion();
-        }
-        return;
-      }
-
-      if(base === "echo"){
-        printLine(parts.slice(1).join(" "));
-        return;
-      }
-
-      printLine(`${base}: command not found (try 'help')`, "err");
     }
+  }
 
-    function boot(){
-      labsSidebar();
-      setLabUI();
+  // Extra redirection for echo: allow "echo hi > file"
+  // We already redirect based on final output, so echo works.
 
-      printLine("Welcome to Linux Practice Labs (Browser Simulation) ✅", "ok");
-      printLine("Pick a lab on the left. Type 'hint' if you get stuck.", "muted");
-      printLine("Type 'help' to see commands.", "muted");
-      printLine("", "muted");
-
-      // show current lab goal
-      const lab = LABS.find(l=>l.id===currentLab);
-      printLine(`Current: ${lab.title}`, "ok");
-      printLine(`Goal: ${lab.desc}`, "muted");
-      setLabUI();
+  // echo redirection should also work even if piped output empty.
+  if(pipeParts.length===1 && pipeParts[0].startsWith("echo ") && redir){
+    // echo output is printed in piped
+    const text = runOne(pipeParts[0], null).out || "";
+    const content = text + "\n";
+    if(redir.type===">") writeFile(redir.file, content, false);
+    else {
+      const existing = ensureFile(redir.file)?.data || "";
+      writeFile(redir.file, existing + content, false);
     }
-
-    function resetLab(){
-      // reset filesystem + cwd and state for current lab only
-      const doneBefore = state.done.has(currentLab);
-      const keepDone = new Set(state.done); // keep other completions
-      FS = buildFS();
-      cwd = "/home/imran";
-      // reset did flags
-      state.did = {
-        lsInProjects:false,
-        grepErrorServerLog:false,
-        findSecret:false,
-        viewAuthFailures:false,
-        chmodX:false,
-        findDockerProcess:false,
-      };
-      // restore completions for other labs
-      state.done = keepDone;
-      if(doneBefore){
-        // If user reset a completed lab, remove completion for that lab
-        state.done.delete(currentLab);
+    if(currentLabId==="l15"){
+      const f = norm(redir.file);
+      if(f==="/home/imran/labs/redirection/notes.txt"){
+        const now = ensureFile(f)?.data || "";
+        if(now.includes("note1")) did.redirNote1 = true;
+        if(now.includes("note2")) did.redirNote2 = true;
       }
-
-      out.innerHTML = "";
-      boot();
-      printLine("Lab reset complete.", "warn");
     }
+    printLine(`(redirected output ${redir.type} ${redir.file})`, "muted");
+  }
 
-    runBtn.addEventListener("click", ()=>{
-      runCommand(input.value);
-      if(input.value.trim()) history.push(input.value.trim());
-      histIndex = history.length;
-      input.value = "";
-      setLabUI();
-      input.focus();
-    });
+  // Lab4 requires: tail app.log 3 after cd
+  // (handled in tail)
+  // Lab8: mkdir + touch handled in respective commands.
 
-    input.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter"){
-        runBtn.click();
-      } else if(e.key === "ArrowUp"){
-        e.preventDefault();
-        if(history.length){
-          histIndex = Math.max(0, histIndex-1);
-          input.value = history[histIndex] || "";
-        }
-      } else if(e.key === "ArrowDown"){
-        e.preventDefault();
-        if(history.length){
-          histIndex = Math.min(history.length, histIndex+1);
-          input.value = history[histIndex] || "";
-        }
-      }
-    });
+  checkCompletion();
+  setPathLabel();
+}
 
-    resetBtn.addEventListener("click", resetLab);
+// Boot
+function boot(showIntro){
+  renderFilters();
+  recomputeBadges();
+  updateStatsUI();
+  renderLabList();
+  selectLab(currentLabId, false);
 
-    // initial render
-    labsSidebar();
-    setLabUI();
-    boot();
-  </script>
+  if(showIntro){
+    printLine("Welcome to Linux Practice Labs — Learning Mode ✅", "ok");
+    printLine("Pick a lab, then start typing commands in the terminal.", "muted");
+    printLine("Use: help, labs, status, hint, solution", "muted");
+    printLine("Pipes: cat file | grep ERROR   •   Redirection: echo hi > file", "muted");
+    printLine("", "muted");
+    const l = getCurrentLab();
+    printLine("Current: " + l.title, "ok");
+    printLine("Goal: " + l.goal, "muted");
+  }
+}
+
+// Inputs
+runBtn.addEventListener("click", ()=>{
+  const v = input.value;
+  input.value = "";
+  runCommand(v);
+  input.focus();
+});
+input.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter") runBtn.click();
+  else if(e.key === "ArrowUp"){
+    e.preventDefault();
+    if(history.length){
+      histIndex = Math.max(0, histIndex-1);
+      input.value = history[histIndex] || "";
+    }
+  } else if(e.key === "ArrowDown"){
+    e.preventDefault();
+    if(history.length){
+      histIndex = Math.min(history.length, histIndex+1);
+      input.value = history[histIndex] || "";
+    }
+  }
+});
+
+// Search
+search.addEventListener("input", ()=> renderLabList());
+
+// Start
+boot(true);
+</script>
 </body>
 </html>
